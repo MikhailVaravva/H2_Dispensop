@@ -1,0 +1,75 @@
+# История изменений проекта Alex Dispenser
+
+## 2026-03-29
+- Проверка проекта (TypeScript, Arduino C++)
+- Исправления в Arduino коде:
+  - fill_controller.cpp: исправлен расчёт объёма воды (калибровка)
+  - serial_protocol.cpp: улучшена обработка парсинга SET_FILL_TIME
+  - serial_protocol.cpp: добавлена защита от переполнения буфера ввода
+
+---
+
+## Текущее состояние проекта (на 2026-03-29)
+
+### Структура проекта
+```
+alex-dispenser-project/
+├── arduino/dispenser_controller/  - Прошивка для ESP32
+├── packages/
+│   ├── frontend/                  - React UI (Vite)
+│   ├── backend/                   - Express.js API
+│   ├── shared/                    - Общие типы TypeScript
+│   └── rpi-service/               - Сервис для Raspberry Pi
+├── deploy/                        - Скрипты деплоя
+├── database.sql                   - Схема БД
+├── README.txt                     - Документация
+└── SETUP.txt                      - Инструкция по настройке
+```
+
+### Технологии
+- Frontend: React 19, Vite, TypeScript
+- Backend: Express.js, TypeScript
+- Hardware: ESP32 (Arduino), Raspberry Pi
+- Serial: Протокол общения ESP32 <-> RPi
+
+### Основные функции
+- NFC аутентификация пользователей
+- Управление наливанием воды через реле
+- Веб-интерфейс для мониторинга и сервисного режима
+- Серийный протокол команд (SET_RED, START_FILL_500ML, и т.д.)
+
+### Известные зависимости
+- react ^19.0.0
+- express ^7.1.0
+- ws (WebSocket)
+- EEPROM (ESP32)
+
+### TypeScript статуc
+- Ошибок компиляции нет
+
+---
+
+## 2026-03-30
+- Деплой на RPi:
+  - Обновлена прошивка ESP32 (добавлена команда TEST_RELAY)
+  - Обновлён frontend (добавлена галочка "Скрыть лог на главном экране" в сервисном режиме)
+- Исправления:
+  - serial_protocol.cpp: добавлена команда TEST_RELAY (включает реле на 500мс)
+  - ServicePanel.tsx: добавлена checkbox для скрытия лога на главном экране
+  - StationPage.tsx: добавлена проверка localStorage для скрытия лога
+  - serial_protocol.cpp: добавлена команда TEST_BUTTON (ожидает нажатия кнопки 10 сек)
+  - ws-messages.ts: добавлены типы TestButtonMsg, TestButtonResultMsg
+  - rpi-service/index.ts: добавлена обработка TEST_BUTTON и BUTTON_TEST_PRESSED
+  - backend/ws-handler.ts: добавлена обработка TEST_BUTTON_RESULT
+  - ServicePanel.tsx: добавлен вывод результата теста кнопки (buttonTestResult)
+- Исправлен баг: TEST_BUTTON не работал (кнопка была отключена)
+  - serial_protocol.cpp: добавлен вызов enableButton() при TEST_BUTTON
+- Serial соединение с ESP32 работает (serialConnected: true)
+- Тест реле работает (TEST_RELAY_RESULT)
+- Кнопка физически работает (зеленый LED при нажатии)
+
+---
+
+## Правила ведения истории
+- Обновлять файл история.txt при каждом изменении проекта
+- Создавать бекап перед обновлением: история_backup_YYYYMMDD.txt

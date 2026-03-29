@@ -1,0 +1,19 @@
+{
+  "name": "alex-dispenser-project",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/shared",
+    "packages/backend",
+    "packages/frontend",
+    "packages/rpi-service"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev -w packages/backend",
+    "dev:frontend": "npm run dev -w packages/frontend",
+    "dev:rpi": "npm run dev -w packages/rpi-service",
+    "build:backend": "npm run build -w packages/backend",
+    "build:frontend": "npm run build -w packages/frontend",
+    "build": "npm run build:backend && npm run build:frontend"
+  }
+}

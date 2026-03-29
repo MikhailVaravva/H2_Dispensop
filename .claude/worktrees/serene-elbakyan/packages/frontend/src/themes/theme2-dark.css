@@ -1,0 +1,152 @@
+/* ==========================================
+   THEME 2: "DARK PREMIUM" — Dark mode, neon
+   Dark background, glowing accents, futuristic
+   ========================================== */
+
+[data-theme="dark"] {
+  --bg-primary: #0A0E1A;
+  --bg-secondary: #141B2D;
+  --bg-card: #1A2235;
+  --text-primary: #FFFFFF;
+  --text-secondary: #8899AA;
+  --accent: #00D4FF;
+  --accent-glow: rgba(0, 212, 255, 0.3);
+  --success: #00FF87;
+  --success-glow: rgba(0, 255, 135, 0.3);
+  --danger: #FF4757;
+  --disabled: #2D3548;
+}
+
+[data-theme="dark"] body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .page-container {
+  max-width: 100%;
+  padding: 0 24px;
+}
+
+[data-theme="dark"] .status-display {
+  padding-top: 40px;
+}
+
+[data-theme="dark"] .station-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+[data-theme="dark"] .connection-status {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  backdrop-filter: none;
+}
+
+[data-theme="dark"] .status-dot.online {
+  background: var(--success);
+  box-shadow: 0 0 8px var(--success-glow);
+}
+
+[data-theme="dark"] .status-dot.offline {
+  background: var(--danger);
+  box-shadow: 0 0 8px rgba(255,71,87,0.4);
+}
+
+[data-theme="dark"] .status-text {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .water-drop-bg {
+  width: 200px;
+  height: 200px;
+  background: var(--bg-card) !important;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 0 40px rgba(0, 212, 255, 0.05) !important;
+}
+
+[data-theme="dark"] .water-drop-bg.state-permission_active {
+  border-color: rgba(0, 255, 135, 0.2);
+  box-shadow: 0 0 60px var(--success-glow) !important;
+}
+
+[data-theme="dark"] .water-drop-bg.state-filling {
+  border-color: rgba(0, 212, 255, 0.2);
+  box-shadow: 0 0 60px var(--accent-glow) !important;
+}
+
+[data-theme="dark"] .volume-badge {
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+[data-theme="dark"] .pour-button {
+  border-radius: 16px;
+  padding: 24px 40px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+[data-theme="dark"] .btn-pour {
+  background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+  box-shadow: 0 0 30px var(--accent-glow);
+  color: #0A0E1A;
+}
+
+[data-theme="dark"] .btn-pour:hover:not(:disabled) {
+  box-shadow: 0 0 50px var(--accent-glow);
+  transform: none;
+}
+
+[data-theme="dark"] .btn-active {
+  background: linear-gradient(135deg, #00FF87 0%, #00CC6A 100%);
+  box-shadow: 0 0 30px var(--success-glow);
+  color: #0A0E1A;
+}
+
+[data-theme="dark"] .btn-filling {
+  background: linear-gradient(135deg, #00D4FF 0%, #0099CC 100%);
+  box-shadow: 0 0 30px var(--accent-glow);
+  color: #0A0E1A;
+}
+
+[data-theme="dark"] .btn-done {
+  background: linear-gradient(135deg, #00FF87 0%, #00CC6A 100%);
+  box-shadow: 0 0 30px var(--success-glow);
+  color: #0A0E1A;
+}
+
+[data-theme="dark"] .btn-error {
+  background: linear-gradient(135deg, #FF4757 0%, #CC2233 100%);
+  box-shadow: 0 0 30px rgba(255,71,87,0.3);
+}
+
+[data-theme="dark"] .btn-offline {
+  background: var(--disabled);
+  color: var(--text-secondary);
+  box-shadow: none;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+[data-theme="dark"] .permission-hint {
+  color: var(--success);
+}
+
+[data-theme="dark"] .permission-hint::before {
+  background: var(--success);
+}
+
+[data-theme="dark"] .retry-link {
+  color: var(--accent);
+}
+
+[data-theme="dark"] .footer .volume-info {
+  color: var(--text-secondary);
+}

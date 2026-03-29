@@ -14,7 +14,7 @@ export interface PingMsg {
   type: 'PING';
 }
 
-export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestButtonMsg | SetFillTimeMsg;
+export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | SetFillTimeMsg | TestButtonMsg;
 
 // WebSocket messages: RPi → Backend
 export interface PermissionAckMsg {
@@ -77,7 +77,8 @@ export interface TestRelayResultMsg {
 
 export interface TestButtonResultMsg {
   type: 'TEST_BUTTON_RESULT';
-  result: 'pressed' | 'timeout' | 'error';
+  success: boolean;
+  pressed: boolean;
 }
 
 export type RpiToBackendMessage =
@@ -114,7 +115,7 @@ export interface StatusUpdateEvent {
   cards?: Array<{ id: string; balance: number; cardType: CardType }>;
   isOnline?: boolean;
   relayTestResult?: 'testing' | 'ok' | 'failed';
-  buttonTestResult?: 'testing' | 'pressed' | 'timeout' | 'error';
+  buttonTestResult?: 'testing' | 'ok' | 'failed';
   fillTimeMs?: number;
   serialLog?: Array<{ time: string; direction: 'in' | 'out'; data: string }>;
 }
@@ -131,7 +132,6 @@ export interface ServiceDiagResultMsg {
   cards?: Array<{ id: string; balance: number; cardType: CardType }>;
   status?: { stationId: string; isOnline: boolean };
   relayTestResult?: 'ok' | 'failed';
-  buttonTestResult?: 'pressed' | 'timeout' | 'error';
   error?: string;
 }
 
@@ -139,11 +139,11 @@ export interface TestRelayMsg {
   type: 'TEST_RELAY';
 }
 
-export interface TestButtonMsg {
-  type: 'TEST_BUTTON';
-}
-
 export interface SetFillTimeMsg {
   type: 'SET_FILL_TIME';
   ms: number;
+}
+
+export interface TestButtonMsg {
+  type: 'TEST_BUTTON';
 }

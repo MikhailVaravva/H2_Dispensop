@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { callServiceDiag, ServiceDiagAction, setFillTime as apiSetFillTime } from '../services/api';
 import { ServiceDiagData, ServiceCard, SerialLogEntry } from '../hooks/useStationStatus';
-import ThemeSwitcher from './ThemeSwitcher';
 
 interface ServicePanelProps {
   stationId: string;
@@ -11,12 +10,15 @@ interface ServicePanelProps {
 export default function ServicePanel({ stationId, diagData }: ServicePanelProps) {
   const [loading, setLoading] = useState<ServiceDiagAction | null>(null);
   const [showSerialLog, setShowSerialLog] = useState(false);
-  const [fillTime, setFillTime] = useState(diagData.fillTimeMs ?? 5000);
+  const [fillTime, setFillTime] = useState(diagData.fillTimeMs ?? 4200);
+  const [hideMainLog, setHideMainLog] = useState(() => {
+    return localStorage.getItem('hideMainLog') === 'true';
+  });
   const logRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (diagData.fillTimeMs !== null) {
-      setFillTime(diagData.fillTimeMs);
+      setFillTime(diagData.fillTimeMs!);
     }
   }, [diagData.fillTimeMs]);
 
@@ -41,6 +43,11 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
     service: 'Сервис',
     staff: 'Персонал',
     user: 'Пользователь',
+  };
+
+  const handleHideMainLogChange = (checked: boolean) => {
+    setHideMainLog(checked);
+    localStorage.setItem('hideMainLog', String(checked));
   };
 
   return (
@@ -81,35 +88,40 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
         </button>
 
         <div className="fill-time-control">
-          <label>Время налива: {fillTime} мс ({(fillTime/1000).toFixed(1)} сек)</label>
+          <label>Время налива: {fillTime} мс ({(fillTime / 1000).toFixed(1)} сек)</label>
           <input
             type="range"
             min="1000"
             max="30000"
-            step="1000"
+            step="500"
             value={fillTime}
-            onChange={(e) => setFillTime(Number(e.target.value))}
+            onChange={e => setFillTime(Number(e.target.value))}
           />
           <button
             className="service-btn"
             style={{ marginTop: '12px', background: '#FF9500', borderColor: '#FF9500', color: '#fff' }}
             onClick={() => { apiSetFillTime(stationId, fillTime); setShowSerialLog(true); }}
+            disabled={loading !== null}
           >
-            💾 Сохранить
+            💾 Сохранить изменения
           </button>
-        </div>
-
-        <div className="fill-time-control">
-          <label>Тема оформления</label>
-          <ThemeSwitcher inline />
         </div>
 
         <button
           className="service-btn"
           onClick={() => setShowSerialLog(!showSerialLog)}
         >
-          📟 Лог {showSerialLog ? '▲' : '▼'}
+          📟 Лог связи {showSerialLog ? '▲' : '▼'}
         </button>
+
+        <label className="checkbox-label">
+          <input
+            type="checkbox"
+            checked={hideMainLog}
+            onChange={(e) => handleHideMainLogChange(e.target.checked)}
+          />
+          Скрыть лог на главном экране
+        </label>
 
         <button
           className="service-btn service-btn-exit"
@@ -120,10 +132,10 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
         </button>
       </div>
 
-      {showSerialLog && diagData.serialLog && (
+      {showSerialLog && (
         <div className="serial-log" ref={logRef}>
           {diagData.serialLog.length === 0 ? (
-            <div className="serial-log-empty">Нет данных. Нажмите "Тест реле" для отправки команды.</div>
+            <div className="serial-log-empty">Нет данных серийной связи</div>
           ) : (
             diagData.serialLog.map((entry: SerialLogEntry, index: number) => (
               <div key={index} className={`serial-log-entry ${entry.direction}`}>
@@ -144,7 +156,7 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
         </div>
       )}
 
-{diagData.isOnline !== null && diagData.relayTestResult === null && (
+      {diagData.isOnline !== null && diagData.relayTestResult === null && (
         <div className={`service-result status-${diagData.isOnline ? 'online' : 'offline'}`}>
           {diagData.isOnline ? '✓ Станция онлайн' : '✗ Станция офлайн'}
         </div>

@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { handleServiceDiagMessage, exitServiceMode } from '../ws/ws-handler';
+import { handleServiceDiagMessage, exitServiceMode, handleSetFillTime } from '../ws/ws-handler';
 import { getStation } from '../services/station.service';
 import { getConnection } from '../ws/connection-registry';
 

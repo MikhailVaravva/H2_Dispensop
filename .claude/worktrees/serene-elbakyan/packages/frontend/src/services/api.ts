@@ -17,17 +17,6 @@ export interface PourResponse {
 
 export type ServiceDiagAction = 'get_cards' | 'get_status' | 'test_relay' | 'test_button' | 'cancel';
 
-export async function setFillTime(stationId: string, ms: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/stations/${stationId}/service`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'set_fill_time', fillTimeMs: ms }),
-  });
-  if (!res.ok) {
-    throw new Error(`HTTP ${res.status}`);
-  }
-}
-
 export interface ServiceDiagResponse {
   success: boolean;
   action?: ServiceDiagAction;
@@ -54,8 +43,19 @@ export async function requestPour(stationId: string): Promise<PourResponse> {
   return res.json();
 }
 
+export async function setFillTime(stationId: string, ms: number): Promise<void> {
+  const res = await fetch(`${BASE_URL}/stations/${stationId}/service`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'set_fill_time', fillTimeMs: ms }),
+  });
+  if (!res.ok) {
+    throw new Error(`HTTP ${res.status}`);
+  }
+}
+
 export async function callServiceDiag(
-  stationId: string, 
+  stationId: string,
   action: ServiceDiagAction
 ): Promise<ServiceDiagResponse> {
   const res = await fetch(`${BASE_URL}/stations/${stationId}/service`, {

@@ -1,0 +1,121 @@
+/* ==========================================
+   THEME 1: "MINIMAL" — Apple/iOS style
+   Clean white, large button, soft shadows
+   ========================================== */
+
+[data-theme="minimal"] {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F5F5F7;
+  --text-primary: #1D1D1F;
+  --text-secondary: #86868B;
+  --accent: #0071E3;
+  --accent-hover: #0077ED;
+  --success: #34C759;
+  --danger: #FF3B30;
+  --disabled: #D2D2D7;
+}
+
+[data-theme="minimal"] body {
+  background: var(--bg-primary);
+}
+
+[data-theme="minimal"] .page-container {
+  max-width: 100%;
+  padding: 0;
+}
+
+[data-theme="minimal"] .status-display {
+  padding-top: 40px;
+}
+
+[data-theme="minimal"] .station-name {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text-secondary);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+[data-theme="minimal"] .connection-status {
+  background: transparent;
+  backdrop-filter: none;
+}
+
+[data-theme="minimal"] .status-text {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+[data-theme="minimal"] .water-drop-bg {
+  width: 200px;
+  height: 200px;
+  background: var(--bg-secondary) !important;
+  box-shadow: none !important;
+  animation: none !important;
+}
+
+[data-theme="minimal"] .water-drop-svg {
+  opacity: 0.9 !important;
+}
+
+[data-theme="minimal"] .volume-badge {
+  background: var(--bg-secondary);
+  box-shadow: none;
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+[data-theme="minimal"] .pour-button {
+  border-radius: 14px;
+  padding: 22px 40px;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+[data-theme="minimal"] .btn-pour {
+  background: var(--accent);
+  box-shadow: none;
+}
+
+[data-theme="minimal"] .btn-pour:hover:not(:disabled) {
+  background: var(--accent-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+[data-theme="minimal"] .btn-active {
+  background: var(--success);
+  box-shadow: none;
+  animation: none;
+}
+
+[data-theme="minimal"] .btn-filling {
+  background: var(--accent);
+  box-shadow: none;
+}
+
+[data-theme="minimal"] .btn-done {
+  background: var(--success);
+  box-shadow: none;
+}
+
+[data-theme="minimal"] .btn-error {
+  background: var(--danger);
+  box-shadow: none;
+}
+
+[data-theme="minimal"] .btn-offline {
+  background: var(--disabled);
+  color: #86868B;
+  box-shadow: none;
+}
+
+[data-theme="minimal"] .permission-hint {
+  color: var(--success);
+}
+
+[data-theme="minimal"] .footer .volume-info {
+  color: var(--text-secondary);
+}

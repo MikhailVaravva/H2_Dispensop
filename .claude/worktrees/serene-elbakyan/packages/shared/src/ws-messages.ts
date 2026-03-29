@@ -1,0 +1,149 @@
+// WebSocket messages: Backend → RPi
+export interface GrantPermissionMsg {
+  type: 'GRANT_PERMISSION';
+  permissionId: string;
+  expiresAt: string; // ISO timestamp
+}
+
+export interface CancelPermissionMsg {
+  type: 'CANCEL_PERMISSION';
+  permissionId: string;
+}
+
+export interface PingMsg {
+  type: 'PING';
+}
+
+export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | SetFillTimeMsg | TestButtonMsg;
+
+// WebSocket messages: RPi → Backend
+export interface PermissionAckMsg {
+  type: 'PERMISSION_ACK';
+  permissionId: string;
+}
+
+export interface ButtonPressedMsg {
+  type: 'BUTTON_PRESSED';
+  permissionId: string;
+}
+
+export interface FillStartedMsg {
+  type: 'FILL_STARTED';
+  permissionId: string;
+}
+
+export interface FillDoneMsg {
+  type: 'FILL_DONE';
+  permissionId: string;
+  durationMs: number;
+}
+
+export interface RpiErrorMsg {
+  type: 'ERROR';
+  code: string;
+  message: string;
+}
+
+export interface RpiStatusMsg {
+  type: 'STATUS';
+  state: string;
+  serialConnected: boolean;
+}
+
+export interface PongMsg {
+  type: 'PONG';
+}
+
+export interface NfcCardReadMsg {
+  type: 'NFC_CARD_READ';
+  cardId: string;
+}
+
+export interface SerialLogMsg {
+  type: 'SERIAL_LOG';
+  direction: 'in' | 'out';
+  data: string;
+}
+
+export interface RpiFillTimeMsg {
+  type: 'FILL_TIME';
+  ms: number;
+}
+
+export interface TestRelayResultMsg {
+  type: 'TEST_RELAY_RESULT';
+  success: boolean;
+}
+
+export interface TestButtonResultMsg {
+  type: 'TEST_BUTTON_RESULT';
+  success: boolean;
+  pressed: boolean;
+}
+
+export type RpiToBackendMessage =
+  | PermissionAckMsg
+  | ButtonPressedMsg
+  | FillStartedMsg
+  | FillDoneMsg
+  | RpiErrorMsg
+  | RpiStatusMsg
+  | PongMsg
+  | NfcCardReadMsg
+  | SerialLogMsg
+  | RpiFillTimeMsg
+  | TestRelayResultMsg
+  | TestButtonResultMsg;
+
+// SSE events: Backend → Frontend
+export type StationState =
+  | 'waiting'
+  | 'permission_active'
+  | 'filling'
+  | 'done'
+  | 'error'
+  | 'offline'
+  | 'service_mode';
+
+export interface StatusUpdateEvent {
+  state: StationState;
+  permissionId?: string;
+  expiresAt?: string;
+  message?: string;
+  cardType?: 'service' | 'staff' | 'user';
+  balance?: number;
+  cards?: Array<{ id: string; balance: number; cardType: CardType }>;
+  isOnline?: boolean;
+  relayTestResult?: 'testing' | 'ok' | 'failed';
+  buttonTestResult?: 'testing' | 'ok' | 'failed';
+  fillTimeMs?: number;
+  serialLog?: Array<{ time: string; direction: 'in' | 'out'; data: string }>;
+}
+
+export type CardType = 'service' | 'staff' | 'user';
+
+export interface ServiceDiagMsg {
+  type: 'SERVICE_DIAG';
+  action: 'get_cards' | 'get_status' | 'test_relay' | 'test_button' | 'cancel';
+}
+
+export interface ServiceDiagResultMsg {
+  type: 'SERVICE_DIAG_RESULT';
+  cards?: Array<{ id: string; balance: number; cardType: CardType }>;
+  status?: { stationId: string; isOnline: boolean };
+  relayTestResult?: 'ok' | 'failed';
+  error?: string;
+}
+
+export interface TestRelayMsg {
+  type: 'TEST_RELAY';
+}
+
+export interface SetFillTimeMsg {
+  type: 'SET_FILL_TIME';
+  ms: number;
+}
+
+export interface TestButtonMsg {
+  type: 'TEST_BUTTON';
+}

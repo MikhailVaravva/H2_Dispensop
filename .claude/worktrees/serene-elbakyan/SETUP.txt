@@ -1,0 +1,101 @@
+# H2 DISPENSER PROJECT
+
+## УСТАНОВКА
+
+### 1. Клонировать репозиторий на Raspberry Pi
+```bash
+cd ~
+git clone ~/git/dispenser.git Alex_dispenser_project
+cd Alex_dispenser_project
+```
+
+### 2. Установить зависимости
+```bash
+sudo apt update
+sudo apt install -y python3-pip nodejs npm mosquitto mosquitto-clients
+
+pip install better-sqlite3
+cd packages/backend && npm install
+cd ../rpi-service && npm install
+cd ../..
+```
+
+### 3. Собрать проекты
+```bash
+cd ~/Alex_dispenser_project
+npm run build
+```
+
+### 4. Запустить backend
+```bash
+cd ~/Alex_dispenser_project/packages/backend
+nohup node dist/index.js > /tmp/backend.log 2>&1 &
+```
+
+### 5. Запустить rpi-service
+```bash
+cd ~/Alex_dispenser_project/packages/rpi-service
+NFC_READER_DEVICE=/dev/input/event2 BACKEND_WS_URL=ws://192.168.1.11:3000 npx ts-node src/index.ts
+```
+
+## NFC РИДЕР
+
+Устройство: WCH.CN USB Serial To HID
+Проверить устройство:
+```bash
+cat /proc/bus/input/devices | grep WCH
+```
+
+## КАРТЫ
+
+Добавить карту:
+```bash
+cd ~/Alex_dispenser_project/packages/backend
+node -e "const db = require('better-sqlite3')('./data/dispenser.db'); db.prepare(\"INSERT INTO cards (id, type, balance) VALUES (?, ?, ?)\").run('1234567890', 'user', 10);"
+```
+
+Типы карт:
+- `service` - сервисная (диагностика)
+- `staff` - персонал (безлимит)
+- `user` - пользователь (баланс)
+
+## КОМАНДЫ GIT
+
+```bash
+# Push на Windows
+git push rpi master
+
+# Pull на Raspberry
+cd ~/Alex_dispenser_project && git pull
+```
+
+## СТРУКТУРА
+
+```
+packages/
+├── backend/          # Node.js backend
+│   ├── src/
+│   │   ├── ws/     # WebSocket обработка
+│   │   ├── services/ # Карты, права, логи
+│   │   └── db/      # SQLite база
+│   └── data/        # dispenser.db
+├── rpi-service/     # Сервис на Raspberry
+│   └── src/
+│       ├── nfc/     # NFC reader (Python)
+│       └── serial/  # ESP32 управление
+└── shared/          # Общие типы
+```
+
+## ESP32 КОМАНДЫ
+
+Через Serial:
+- `START\n` - начать налив
+- `STOP\n` - остановить
+- `STATUS\n` - статус
+
+## ПОРТЫ
+
+- Backend: 3000
+- Serial: /dev/ttyUSB0
+- NFC: /dev/input/event2
+- WebSocket: ws://IP:3000/ws/rpi

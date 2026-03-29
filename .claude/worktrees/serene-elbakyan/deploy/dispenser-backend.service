@@ -1,0 +1,19 @@
+[Unit]
+Description=Dispenser Backend Server
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/opt/dispenser
+EnvironmentFile=/opt/dispenser/.env
+ExecStart=/usr/bin/node packages/backend/dist/index.js
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dispenser-backend
+
+[Install]
+WantedBy=multi-user.target

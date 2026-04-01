@@ -1,7 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { callServiceDiag, ServiceDiagAction, setFillTime as apiSetFillTime } from '../services/api';
+import { callServiceDiag, ServiceDiagAction, setFillTime as apiSetFillTime, getFillTime as apiGetFillTime, getBgVideo, saveBgVideo } from '../services/api';
 import { ServiceDiagData, ServiceCard, SerialLogEntry } from '../hooks/useStationStatus';
-import ThemeSwitcher from './ThemeSwitcher';
 
 interface ServicePanelProps {
   stationId: string;
@@ -12,7 +11,16 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
   const [loading, setLoading] = useState<ServiceDiagAction | null>(null);
   const [showSerialLog, setShowSerialLog] = useState(false);
   const [fillTime, setFillTime] = useState(diagData.fillTimeMs ?? 5000);
+  const [bgVideoUrl, setBgVideoUrl] = useState('');
   const logRef = useRef<HTMLDivElement>(null);
+
+  // Request fill time from ESP32 when entering service mode
+  useEffect(() => {
+    apiGetFillTime(stationId).catch(err => {
+      console.error('Failed to get fill time:', err);
+    });
+    getBgVideo().then(setBgVideoUrl).catch(() => {});
+  }, [stationId]);
 
   useEffect(() => {
     if (diagData.fillTimeMs !== null) {
@@ -100,8 +108,34 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
         </div>
 
         <div className="fill-time-control">
-          <label>Тема оформления</label>
-          <ThemeSwitcher inline />
+          <label>Видео на фоне (URL)</label>
+          <input
+            type="text"
+            className="service-fill-input"
+            placeholder="https://...mp4"
+            value={bgVideoUrl}
+            onChange={(e) => setBgVideoUrl(e.target.value)}
+          />
+          <button
+            className="service-btn"
+            style={{ marginTop: '8px', background: '#9C27B0', borderColor: '#9C27B0', color: '#fff' }}
+            onClick={() => {
+              saveBgVideo(bgVideoUrl).catch(err => console.error('saveBgVideo error:', err));
+            }}
+          >
+            🎬 Сохранить видео
+          </button>
+          {bgVideoUrl && (
+            <button
+              className="service-btn"
+              style={{ marginTop: '8px', background: '#f44336', borderColor: '#f44336', color: '#fff' }}
+              onClick={() => {
+                saveBgVideo('').then(() => setBgVideoUrl('')).catch(err => console.error('saveBgVideo error:', err));
+              }}
+            >
+              🗑️ Убрать видео
+            </button>
+          )}
         </div>
 
         <button

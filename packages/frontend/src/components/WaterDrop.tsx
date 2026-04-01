@@ -2,6 +2,7 @@ import { StationState } from '../hooks/useStationStatus';
 
 interface WaterDropProps {
   state: StationState;
+  onClick?: () => void;
 }
 
 const stateColors: Record<StationState, { fill: string; opacity: number }> = {
@@ -15,12 +16,12 @@ const stateColors: Record<StationState, { fill: string; opacity: number }> = {
   service_mode: { fill: '#FF9500', opacity: 1 },
 };
 
-export default function WaterDrop({ state }: WaterDropProps) {
+export default function WaterDrop({ state, onClick }: WaterDropProps) {
   const { fill, opacity } = stateColors[state] || stateColors.waiting;
   const isFilling = state === 'filling';
 
   return (
-    <div className="water-drop-wrapper">
+    <div className="water-drop-wrapper" onClick={onClick}>
       <div className={`water-drop-bg state-${state}`}>
         <svg
           className={`water-drop-svg ${isFilling ? 'fill-wave' : ''}`}

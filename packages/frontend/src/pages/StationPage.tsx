@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { useStationStatus, SerialLogEntry } from '../hooks/useStationStatus';
 import { usePourPermission } from '../hooks/usePourPermission';
-import { fetchStation, StationInfo } from '../services/api';
+import { fetchStation, StationInfo, callServiceDiag, getBgVideo } from '../services/api';
 import StatusDisplay from '../components/StatusDisplay';
 import PourButton from '../components/PourButton';
 import WaterDrop from '../components/WaterDrop';
@@ -12,12 +12,26 @@ export default function StationPage() {
   const { stationId } = useParams<{ stationId: string }>();
   const [station, setStation] = useState<StationInfo | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [bgVideo, setBgVideo] = useState('');
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const { state, expiresAt, isConnected, diagData, serialLog } = useStationStatus(stationId!);
   const { pour, isRequesting, error: pourError, reset } = usePourPermission(stationId!);
   const [showSerialLog, setShowSerialLog] = useState(true);
   const [hideMainLog, setHideMainLog] = useState(() => localStorage.getItem('hideMainLog') === 'true');
   const serialLogRef = useRef<HTMLDivElement>(null);
+  const tapCountRef = useRef(0);
+  const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleDropTap = () => {
+    tapCountRef.current += 1;
+    if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
+    tapTimerRef.current = setTimeout(() => { tapCountRef.current = 0; }, 2000);
+    if (tapCountRef.current >= 5) {
+      tapCountRef.current = 0;
+      callServiceDiag(stationId!, 'enter');
+    }
+  };
 
   useEffect(() => {
     const handleStorage = () => {
@@ -42,6 +56,19 @@ export default function StationPage() {
       .then(setStation)
       .catch((err) => setLoadError(err.message));
   }, [stationId]);
+
+  useEffect(() => {
+    getBgVideo().then(setBgVideo).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    if (bgVideo) {
+      document.body.classList.add('has-video');
+    } else {
+      document.body.classList.remove('has-video');
+    }
+    return () => document.body.classList.remove('has-video');
+  }, [bgVideo]);
 
   if (loadError) {
     return (
@@ -70,6 +97,17 @@ export default function StationPage() {
 
   return (
     <div className="page-container">
+      {bgVideo && (
+        <video
+          ref={videoRef}
+          className="background-video"
+          autoPlay
+          loop
+          muted
+          playsInline
+          src={bgVideo}
+        />
+      )}
       <StatusDisplay
         stationName={station.name}
         isConnected={isConnected}
@@ -84,7 +122,7 @@ export default function StationPage() {
           />
         ) : (
           <>
-            <WaterDrop state={state} />
+            <WaterDrop state={state} onClick={handleDropTap} />
 
             <PourButton
               stationState={state}

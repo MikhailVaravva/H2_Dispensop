@@ -14,7 +14,7 @@ export interface PingMsg {
   type: 'PING';
 }
 
-export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestButtonMsg | SetFillTimeMsg;
+export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestButtonMsg | SetFillTimeMsg | GetFillTimeMsg;
 
 // WebSocket messages: RPi → Backend
 export interface PermissionAckMsg {
@@ -146,4 +146,8 @@ export interface TestButtonMsg {
 export interface SetFillTimeMsg {
   type: 'SET_FILL_TIME';
   ms: number;
+}
+
+export interface GetFillTimeMsg {
+  type: 'GET_FILL_TIME';
 }

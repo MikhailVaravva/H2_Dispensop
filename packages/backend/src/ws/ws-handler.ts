@@ -9,6 +9,10 @@ import { GrantPermissionMsg } from '@dispenser/shared';
 
 let serviceDiagActive: { stationId: string; cardId: string } | null = null;
 
+export function isServiceModeActive(stationId: string): boolean {
+  return serviceDiagActive?.stationId === stationId;
+}
+
 const MAX_SERIAL_LOG_ENTRIES = 50;
 const serialLogBuffer: Map<string, Array<{ time: string; direction: 'in' | 'out'; data: string }>> = new Map();
 
@@ -79,7 +83,7 @@ export function handleRpiMessage(stationId: string, message: RpiToBackendMessage
     case 'TEST_BUTTON_RESULT':
       sendSseEvent(stationId, {
         state: 'service_mode',
-        buttonTestResult: (message as any).success && (message as any).pressed ? 'ok' : 'failed',
+        buttonTestResult: (message as any).success && (message as any).pressed ? 'pressed' : 'error',
       });
       break;
 
@@ -236,6 +240,15 @@ function handleServiceCard(stationId: string, cardId: string, card: Card) {
   sendSseEvent(stationId, {
     state: 'service_mode',
     message: 'Режим диагностики',
+    cardType: 'service' as CardType,
+  });
+}
+
+export function enterServiceModeManually(stationId: string) {
+  serviceDiagActive = { stationId, cardId: 'manual' };
+  sendSseEvent(stationId, {
+    state: 'service_mode',
+    message: 'Режим диагностики (ручной вход)',
     cardType: 'service' as CardType,
   });
 }

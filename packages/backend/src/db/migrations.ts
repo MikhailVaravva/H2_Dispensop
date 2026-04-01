@@ -51,6 +51,11 @@ export function runMigrations() {
 
     CREATE INDEX IF NOT EXISTS idx_event_logs_type
       ON event_logs(event_type);
+
+    CREATE TABLE IF NOT EXISTS config (
+      key TEXT PRIMARY KEY,
+      value TEXT NOT NULL DEFAULT ''
+    );
   `);
 
   // Migration: add card_type column if it doesn't exist (for existing databases)
@@ -67,6 +72,15 @@ export function runMigrations() {
       'INSERT INTO stations (id, name, location) VALUES (?, ?, ?)'
     ).run('station-001', 'Станция 1', 'Тест');
     log('info', 'Seeded test station', { stationId: 'station-001' });
+  }
+
+  // Auto-seed service card for service mode
+  const serviceCard = db.prepare('SELECT id FROM cards WHERE id = ?').get('999999999');
+  if (!serviceCard) {
+    db.prepare(
+      'INSERT INTO cards (id, balance, card_type) VALUES (?, ?, ?)'
+    ).run('999999999', 0, 'service');
+    log('info', 'Seeded service card', { cardId: '999999999' });
   }
 
   log('info', 'Database migrations complete');

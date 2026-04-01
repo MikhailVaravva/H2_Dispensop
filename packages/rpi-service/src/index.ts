@@ -89,6 +89,11 @@ function handleBackendMessage(message: BackendToRpiMessage) {
       sendRawSerial(`SET_FILL_TIME:${message.ms}`);
       break;
 
+    case 'GET_FILL_TIME':
+      log('info', 'Get fill time command received');
+      sendRawSerial('GET_FILL_TIME');
+      break;
+
     case 'TEST_RELAY':
       log('info', 'Test relay command received');
       sendCommand('TEST_RELAY' as any)

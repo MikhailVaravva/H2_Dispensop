@@ -6,7 +6,7 @@ import { log } from '../utils/logger';
 import { logEvent } from '../services/event-log.service';
 import { setStationOnline } from '../services/station.service';
 import { registerConnection, unregisterConnection } from './connection-registry';
-import { handleRpiMessage } from './ws-handler';
+import { handleRpiMessage, isServiceModeActive } from './ws-handler';
 import { sendSseEvent } from './sse-manager';
 
 export function setupWebSocketServer(httpServer: Server) {
@@ -43,7 +43,9 @@ export function setupWebSocketServer(httpServer: Server) {
     registerConnection(stationId, ws);
     setStationOnline(stationId, true);
     logEvent(stationId, 'station_connected');
-    sendSseEvent(stationId, { state: 'waiting' });
+    if (!isServiceModeActive(stationId)) {
+      sendSseEvent(stationId, { state: 'waiting' });
+    }
 
     // Heartbeat
     const heartbeatInterval = setInterval(() => {
@@ -67,7 +69,9 @@ export function setupWebSocketServer(httpServer: Server) {
       unregisterConnection(stationId);
       setStationOnline(stationId, false);
       logEvent(stationId, 'station_disconnected');
-      sendSseEvent(stationId, { state: 'offline' });
+      if (!isServiceModeActive(stationId)) {
+        sendSseEvent(stationId, { state: 'offline' });
+      }
     });
 
     ws.on('error', (err) => {

@@ -196,8 +196,9 @@ function handleNfcCardRead(stationId: string, cardId: string) {
   logEvent(stationId, 'card_read', undefined, { cardId });
 
   if (serviceDiagActive && serviceDiagActive.stationId === stationId) {
-    if (serviceDiagActive.cardId === cardId) {
-      log('info', 'Service card re-tapped, exiting service mode', { stationId });
+    const isManualEntry = serviceDiagActive.cardId === 'manual';
+    if (serviceDiagActive.cardId === cardId || isManualEntry) {
+      log('info', 'Exiting service mode via card tap', { stationId, manual: isManualEntry });
       serviceDiagActive = null;
       sendSseEvent(stationId, { state: 'waiting' });
     } else {

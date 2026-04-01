@@ -4,6 +4,7 @@ import { getStationLogs } from '../services/event-log.service';
 import { addSseClient, removeSseClient, sendSseEvent } from '../ws/sse-manager';
 import { isStationConnected } from '../ws/connection-registry';
 import { logEvent } from '../services/event-log.service';
+import { isServiceModeActive } from '../ws/ws-handler';
 
 const router = Router();
 
@@ -47,7 +48,7 @@ router.get('/:stationId/events', (req: Request, res: Response) => {
 
   // Send initial state
   const connected = isStationConnected(stationId);
-  const initialState = connected ? 'waiting' : 'offline';
+  const initialState = isServiceModeActive(stationId) ? 'service_mode' : (connected ? 'waiting' : 'offline');
   res.write(`event: status_update\ndata: ${JSON.stringify({ state: initialState })}\n\n`);
 
   addSseClient(stationId, res);

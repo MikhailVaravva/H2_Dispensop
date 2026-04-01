@@ -59,6 +59,7 @@ while True:
             onCardRead(uid);
             console.log('\n>>> CARD:', uid);
             fs.unlinkSync(UID_FILE);
+            setTimeout(() => { lastUid = ''; }, 2000);
           }
         }
       } catch {}

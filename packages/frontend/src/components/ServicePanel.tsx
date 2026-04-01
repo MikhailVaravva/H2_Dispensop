@@ -12,6 +12,7 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
   const [showSerialLog, setShowSerialLog] = useState(false);
   const [fillTime, setFillTime] = useState(diagData.fillTimeMs ?? 5000);
   const [bgVideoUrl, setBgVideoUrl] = useState('');
+  const [showMainLog, setShowMainLog] = useState(() => localStorage.getItem('hideMainLog') !== 'true');
   const logRef = useRef<HTMLDivElement>(null);
 
   // Request fill time from ESP32 when entering service mode
@@ -144,6 +145,19 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
         >
           📟 Лог {showSerialLog ? '▲' : '▼'}
         </button>
+
+        <label className="service-btn" style={{ cursor: 'pointer', justifyContent: 'space-between' }}>
+          📋 Лог на главном экране
+          <input
+            type="checkbox"
+            checked={showMainLog}
+            style={{ width: '20px', height: '20px', cursor: 'pointer' }}
+            onChange={(e) => {
+              setShowMainLog(e.target.checked);
+              localStorage.setItem('hideMainLog', e.target.checked ? 'false' : 'true');
+            }}
+          />
+        </label>
 
         <button
           className="service-btn service-btn-exit"

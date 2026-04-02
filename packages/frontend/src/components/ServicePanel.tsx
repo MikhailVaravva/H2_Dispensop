@@ -9,7 +9,8 @@ interface ServicePanelProps {
 
 export default function ServicePanel({ stationId, diagData }: ServicePanelProps) {
   const [loading, setLoading] = useState<ServiceDiagAction | null>(null);
-  const [showSerialLog, setShowSerialLog] = useState(false);
+  const [showSerialLog, setShowSerialLog] = useState(true);
+  const [clearedIndex, setClearedIndex] = useState(0);
   const [fillTime, setFillTime] = useState(diagData.fillTimeMs ?? 5000);
   const [bgVideoUrl, setBgVideoUrl] = useState('');
   const [videos, setVideos] = useState<VideoItem[]>([]);
@@ -170,6 +171,8 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
     user: 'Польз.',
   };
 
+  const visibleLog = (diagData.serialLog ?? []).slice(clearedIndex);
+
   return (
     <div className="service-panel">
       <div className="service-panel-title">🔧 Режим диагностики</div>
@@ -320,12 +323,39 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
           )}
         </div>
 
-        <button
-          className="service-btn"
-          onClick={() => setShowSerialLog(!showSerialLog)}
-        >
-          📟 Лог {showSerialLog ? '▲' : '▼'}
-        </button>
+        <div className="serial-log-window">
+          <div className="serial-log-header" onClick={() => setShowSerialLog(!showSerialLog)}>
+            <span className="serial-log-title">📟 Лог COM-порта</span>
+            {visibleLog.length > 0 && (
+              <span className="serial-log-count">{visibleLog.length}</span>
+            )}
+            <button
+              className="serial-log-clear"
+              onClick={e => { e.stopPropagation(); setClearedIndex(diagData.serialLog?.length ?? 0); }}
+            >
+              Очистить
+            </button>
+            <span className="serial-log-collapse">{showSerialLog ? '▲' : '▼'}</span>
+          </div>
+          {showSerialLog && (
+            <div className="serial-log-body" ref={logRef}>
+              {visibleLog.length === 0 ? (
+                <div className="serial-log-empty">Нет данных</div>
+              ) : (
+                visibleLog.map((entry: SerialLogEntry, index: number) => (
+                  <div
+                    key={clearedIndex + index}
+                    className={`serial-log-entry ${entry.direction}${entry.data.startsWith('TOUCH_RX:') || entry.data === 'TOUCH_PRESSED' ? ' touch' : ''}`}
+                  >
+                    <span className="serial-time">{entry.time.split('T')[1]?.split('.')[0]}</span>
+                    <span className="serial-dir">{entry.direction === 'in' ? '←' : '→'}</span>
+                    <span className="serial-data">{entry.data}</span>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+        </div>
 
         <label className="service-btn" style={{ cursor: 'pointer', justifyContent: 'space-between' }}>
           📋 Лог на главном экране
@@ -511,23 +541,7 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
         </div>
       )}
 
-      {showSerialLog && diagData.serialLog && (
-        <div className="serial-log" ref={logRef}>
-          {diagData.serialLog.length === 0 ? (
-            <div className="serial-log-empty">Нет данных. Нажмите "Тест реле" для отправки команды.</div>
-          ) : (
-            diagData.serialLog.map((entry: SerialLogEntry, index: number) => (
-              <div key={index} className={`serial-log-entry ${entry.direction}`}>
-                <span className="serial-time">{entry.time.split('T')[1]?.split('.')[0]}</span>
-                <span className="serial-dir">{entry.direction === 'in' ? '←' : '→'}</span>
-                <span className="serial-data">{entry.data}</span>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      {diagData.relayTestResult && (
+{diagData.relayTestResult && (
         <div className={`service-result relay-${diagData.relayTestResult}`}>
           {diagData.relayTestResult === 'testing' && 'Тестирование реле...'}
           {diagData.relayTestResult === 'ok' && '✓ Реле работает'}

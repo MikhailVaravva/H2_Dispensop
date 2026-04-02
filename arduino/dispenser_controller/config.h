@@ -7,6 +7,11 @@
 #define PIN_LED_GREEN    17   // Green LED (or bicolor LED anode 2)
 #define PIN_RELAY        18   // Relay controlling valve/pump
 
+// Touch panel UART (HardwareSerial 2, remapped)
+#define PIN_TOUCH_RX     22   // GPIO 22 <- panel TX
+#define PIN_TOUCH_TX     21   // GPIO 21 -> panel RX (optional response)
+#define TOUCH_BAUD       9600 // adjust based on panel protocol
+
 // Serial configuration
 #define SERIAL_BAUD      9600
 

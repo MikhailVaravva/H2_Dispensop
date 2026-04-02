@@ -4,6 +4,7 @@
 #include "button_handler.h"
 #include "fill_controller.h"
 #include "serial_protocol.h"
+#include "touch_panel.h"
 
 unsigned long lastSerialActivity = 0;
 bool testModeActive = false;
@@ -21,6 +22,7 @@ void setup() {
   buttonInit();
   fillInit();
   serialProtocolInit();
+  touchPanelInit();
 
   lastSerialActivity = millis();
 
@@ -30,6 +32,7 @@ void setup() {
 void loop() {
   processSerialInput();
   checkFillProgress();
+  pollTouchPanel();
   
   // Normal button polling
   if (pollButton()) {

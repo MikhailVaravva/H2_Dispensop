@@ -9,6 +9,7 @@ export type StateEvent =
   | 'GRANT_PERMISSION'
   | 'CANCEL_PERMISSION'
   | 'BUTTON_PRESSED'
+  | 'TOUCH_PRESSED'
   | 'FILL_DONE'
   | 'TIMEOUT'
   | 'ERROR'
@@ -23,6 +24,7 @@ export const TRANSITIONS: Record<StationState, Partial<Record<StateEvent, Statio
   },
   [StationState.PERMISSION_READY]: {
     BUTTON_PRESSED: StationState.FILLING,
+    TOUCH_PRESSED: StationState.FILLING,
     TIMEOUT: StationState.WAITING,
     CANCEL_PERMISSION: StationState.WAITING,
     ERROR: StationState.ERROR,

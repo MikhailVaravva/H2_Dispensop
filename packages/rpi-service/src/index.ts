@@ -22,6 +22,14 @@ function handleSerialData(line: string) {
       type: 'BUTTON_PRESSED',
       permissionId: machine.getPermissionId() || '',
     });
+  } else if (line === 'TOUCH_PRESSED') {
+    machine.dispatch('TOUCH_PRESSED');
+    wsClient.send({
+      type: 'BUTTON_PRESSED',
+      permissionId: machine.getPermissionId() || '',
+    });
+  } else if (line.startsWith('TOUCH_RX:')) {
+    log('info', 'Touch panel byte received', { data: line });
   } else if (line === 'FILL_STARTED') {
     wsClient.send({
       type: 'FILL_STARTED',

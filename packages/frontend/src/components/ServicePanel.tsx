@@ -165,9 +165,9 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
   });
 
   const cardTypeLabel: Record<ServiceCard['cardType'], string> = {
-    service: 'Сервис',
-    staff: 'Персонал',
-    user: 'Пользователь',
+    service: 'Серв.',
+    staff: 'Перс.',
+    user: 'Польз.',
   };
 
   return (

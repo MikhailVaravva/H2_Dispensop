@@ -112,7 +112,7 @@ export default function StationPage() {
   }
 
   return (
-    <div className="page-container">
+    <div className={`page-container${state === 'service_mode' ? ' service-mode-container' : ''}`}>
       {bgVideo && state !== 'service_mode' && (
         <video
           ref={videoRef}

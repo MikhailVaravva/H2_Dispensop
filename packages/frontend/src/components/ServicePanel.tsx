@@ -469,7 +469,7 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
                     <div key={t.id} className="history-item">
                       <span className={`history-type ${t.type}`}>{t.type}</span>
                       <span className="history-amount">{t.amount > 0 ? '+' : ''}{t.amount}</span>
-                      <span className="history-date">{new Date(t.createdAt).toLocaleString('ru-RU')}</span>
+                      <span className="history-date">{new Date(t.createdAt.includes('Z') ? t.createdAt : t.createdAt + 'Z').toLocaleString('ru-RU')}</span>
                     </div>
                   ))}
                 </div>

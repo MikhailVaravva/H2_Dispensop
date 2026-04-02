@@ -27,7 +27,7 @@ export default function CardStatusPanel({ card }: { card: LastCard }) {
       {card.message && (
         <div className="card-status-msg">{card.message}</div>
       )}
-      <div className="card-status-time">{card.scannedAt.split('T')[1]?.split('.')[0]}</div>
+      <div className="card-status-time">{new Date(card.scannedAt).toLocaleTimeString('ru-RU')}</div>
     </div>
   );
 }

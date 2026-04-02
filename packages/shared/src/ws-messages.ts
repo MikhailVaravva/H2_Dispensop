@@ -110,6 +110,7 @@ export interface StatusUpdateEvent {
   expiresAt?: string;
   message?: string;
   cardType?: 'service' | 'staff' | 'user';
+  cardId?: string;
   balance?: number;
   cards?: Array<{ id: string; balance: number; cardType: CardType }>;
   isOnline?: boolean;
@@ -117,6 +118,7 @@ export interface StatusUpdateEvent {
   buttonTestResult?: 'testing' | 'pressed' | 'timeout' | 'error';
   fillTimeMs?: number;
   serialLog?: Array<{ time: string; direction: 'in' | 'out'; data: string }>;
+  scannedCardId?: string;
 }
 
 export type CardType = 'service' | 'staff' | 'user';

@@ -7,6 +7,8 @@ import StatusDisplay from '../components/StatusDisplay';
 import PourButton from '../components/PourButton';
 import WaterDrop from '../components/WaterDrop';
 import ServicePanel from '../components/ServicePanel';
+import QrCodeButton from '../components/QrCodeButton';
+import CardStatusPanel from '../components/CardStatusPanel';
 
 export default function StationPage() {
   const { stationId } = useParams<{ stationId: string }>();
@@ -15,10 +17,12 @@ export default function StationPage() {
   const [bgVideo, setBgVideo] = useState('');
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const { state, expiresAt, isConnected, diagData, serialLog } = useStationStatus(stationId!);
+  const { state, expiresAt, isConnected, diagData, serialLog, lastCard } = useStationStatus(stationId!);
   const { pour, isRequesting, error: pourError, reset } = usePourPermission(stationId!);
   const [showSerialLog, setShowSerialLog] = useState(true);
   const [hideMainLog, setHideMainLog] = useState(() => localStorage.getItem('hideMainLog') === 'true');
+  const [hideQr, setHideQr] = useState(() => localStorage.getItem('hideQr') === 'true');
+  const [hideCardPanel, setHideCardPanel] = useState(() => localStorage.getItem('hideCardPanel') === 'true');
   const serialLogRef = useRef<HTMLDivElement>(null);
   const tapCountRef = useRef(0);
   const tapTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -38,7 +42,11 @@ export default function StationPage() {
       setHideMainLog(localStorage.getItem('hideMainLog') === 'true');
     };
     window.addEventListener('storage', handleStorage);
-    const interval = setInterval(handleStorage, 1000);
+    const interval = setInterval(() => {
+      setHideMainLog(localStorage.getItem('hideMainLog') === 'true');
+      setHideQr(localStorage.getItem('hideQr') === 'true');
+      setHideCardPanel(localStorage.getItem('hideCardPanel') === 'true');
+    }, 1000);
     return () => {
       window.removeEventListener('storage', handleStorage);
       clearInterval(interval);
@@ -60,6 +68,14 @@ export default function StationPage() {
   useEffect(() => {
     getBgVideo().then(setBgVideo).catch(() => {});
   }, []);
+
+  const prevStateRef = useRef(state);
+  useEffect(() => {
+    if (prevStateRef.current === 'service_mode' && state !== 'service_mode') {
+      getBgVideo().then(setBgVideo).catch(() => {});
+    }
+    prevStateRef.current = state;
+  }, [state]);
 
   useEffect(() => {
     if (bgVideo) {
@@ -165,6 +181,14 @@ export default function StationPage() {
       <div className="footer">
         <p className="volume-info">Станция рефила воды</p>
       </div>
+
+      {state !== 'service_mode' && !hideQr && (
+        <QrCodeButton url={window.location.href} />
+      )}
+
+      {state !== 'service_mode' && !hideCardPanel && lastCard && (
+        <CardStatusPanel card={lastCard} />
+      )}
     </div>
   );
 }

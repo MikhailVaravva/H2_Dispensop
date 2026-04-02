@@ -56,6 +56,18 @@ export function runMigrations() {
       key TEXT PRIMARY KEY,
       value TEXT NOT NULL DEFAULT ''
     );
+
+    CREATE TABLE IF NOT EXISTS card_transactions (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      card_id TEXT NOT NULL,
+      type TEXT NOT NULL,
+      amount INTEGER NOT NULL,
+      created_at TEXT NOT NULL DEFAULT (datetime('now')),
+      FOREIGN KEY (card_id) REFERENCES cards(id)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_card_transactions_card
+      ON card_transactions(card_id);
   `);
 
   // Migration: add card_type column if it doesn't exist (for existing databases)

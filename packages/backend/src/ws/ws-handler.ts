@@ -202,7 +202,11 @@ function handleNfcCardRead(stationId: string, cardId: string) {
       serviceDiagActive = null;
       sendSseEvent(stationId, { state: 'waiting' });
     } else {
-      log('info', 'Service diag active, ignoring card read', { stationId });
+      log('info', 'Card scanned in service mode, forwarding to UI', { stationId, cardId });
+      sendSseEvent(stationId, {
+        state: 'service_mode',
+        scannedCardId: cardId,
+      });
     }
     return;
   }
@@ -281,6 +285,7 @@ function handleStaffCard(stationId: string, card: Card) {
     state: 'permission_active',
     message: 'Карта сотрудника',
     cardType: 'staff' as CardType,
+    cardId: card.id,
     expiresAt: permission.expiresAt,
   });
 }
@@ -293,6 +298,7 @@ function handleUserCard(stationId: string, card: Card) {
       state: 'waiting',
       message: 'Нет монет на карте',
       cardType: 'user' as CardType,
+      cardId: card.id,
       balance: 0,
     });
     return;
@@ -317,6 +323,7 @@ function handleUserCard(stationId: string, card: Card) {
   sendSseEvent(stationId, {
     state: 'permission_active',
     cardType: 'user' as CardType,
+    cardId: card.id,
     balance: newBalance,
     permissionId: permission.id,
     expiresAt: permission.expiresAt,

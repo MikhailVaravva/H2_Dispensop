@@ -81,6 +81,92 @@ export async function saveBgVideo(url: string): Promise<void> {
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
 }
 
+export interface CardInfo {
+  id: string;
+  balance: number;
+  cardType: string;
+}
+
+export interface CardTransaction {
+  id: number;
+  type: string;
+  amount: number;
+  createdAt: string;
+}
+
+export async function checkCard(cardId: string): Promise<CardInfo | null> {
+  const res = await fetch(`${BASE_URL}/cards/${encodeURIComponent(cardId)}`);
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+export async function getAllCards(): Promise<CardInfo[]> {
+  const res = await fetch(`${BASE_URL}/cards`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+export async function getCardHistory(cardId: string): Promise<CardTransaction[]> {
+  const res = await fetch(`${BASE_URL}/cards/${encodeURIComponent(cardId)}/history`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+export async function updateCard(cardId: string, updates: { balance?: number; cardType?: string }): Promise<CardInfo> {
+  const res = await fetch(`${BASE_URL}/cards/${encodeURIComponent(cardId)}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) {
+    const d = await res.json().catch(() => ({}));
+    throw new Error((d as { error?: string }).error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function deleteCard(cardId: string): Promise<void> {
+  const res = await fetch(`${BASE_URL}/cards/${encodeURIComponent(cardId)}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+}
+
+export async function addCard(id: string, cardType: string, balance: number): Promise<CardInfo> {
+  const res = await fetch(`${BASE_URL}/cards`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id, cardType, balance }),
+  });
+  if (!res.ok) {
+    const d = await res.json().catch(() => ({}));
+    throw new Error((d as { error?: string }).error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+export async function topupCard(cardId: string, amount: number): Promise<CardInfo> {
+  const res = await fetch(`${BASE_URL}/cards/${encodeURIComponent(cardId)}/topup`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount }),
+  });
+  if (!res.ok) {
+    const d = await res.json().catch(() => ({}));
+    throw new Error((d as { error?: string }).error || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+export interface VideoItem { name: string; url: string; }
+
+export async function getAvailableVideos(): Promise<VideoItem[]> {
+  const res = await fetch(`${BASE_URL}/videos`);
+  if (!res.ok) return [];
+  return res.json();
+}
+
 export async function callServiceDiag(
   stationId: string, 
   action: ServiceDiagAction

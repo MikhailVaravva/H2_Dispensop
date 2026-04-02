@@ -5,6 +5,8 @@ import stationRoutes from './routes/station.routes';
 import permissionRoutes from './routes/permission.routes';
 import serviceRoutes from './routes/service.routes';
 import configRoutes from './routes/config.routes';
+import videosRoutes from './routes/videos.routes';
+import cardsRoutes from './routes/cards.routes';
 import { errorHandler } from './middleware/error-handler';
 
 const app = express();
@@ -21,10 +23,16 @@ app.use('/api/stations', stationRoutes);
 app.use('/api/stations', permissionRoutes);
 app.use('/api/stations', serviceRoutes);
 app.use('/api/config', configRoutes);
+app.use('/api/videos', videosRoutes);
+app.use('/api/cards', cardsRoutes);
 
 // Serve frontend in production
 const frontendDist = path.resolve(__dirname, '../../frontend/dist');
 app.use(express.static(frontendDist));
+
+// Serve videos
+const videosDir = path.join(__dirname, '../public/videos');
+app.use('/videos', express.static(videosDir));
 app.get('/station/*', (_req, res) => {
   res.sendFile(path.join(frontendDist, 'index.html'));
 });

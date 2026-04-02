@@ -23,6 +23,8 @@ export type EventType =
   | 'card_not_found'
   | 'card_no_balance'
   | 'card_created'
+  | 'card_deleted'
+  | 'card_updated'
   | 'coins_added'
   | 'coin_deducted'
   | 'service_card_read'

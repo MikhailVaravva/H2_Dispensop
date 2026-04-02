@@ -30,6 +30,7 @@ export interface ServiceDiagData {
   relayTestResult: 'testing' | 'ok' | 'failed' | null;
   fillTimeMs: number | null;
   serialLog: SerialLogEntry[];
+  scannedCardId: string | null;
 }
 
 interface StatusEvent {
@@ -42,6 +43,18 @@ interface StatusEvent {
   relayTestResult?: 'testing' | 'ok' | 'failed';
   fillTimeMs?: number;
   serialLog?: SerialLogEntry[];
+  cardType?: CardType;
+  cardId?: string;
+  balance?: number;
+  scannedCardId?: string;
+}
+
+export interface LastCard {
+  id: string;
+  cardType: CardType;
+  balance?: number;
+  message?: string;
+  scannedAt: string;
 }
 
 export function useStationStatus(stationId: string) {
@@ -51,12 +64,14 @@ export function useStationStatus(stationId: string) {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [serialLog, setSerialLog] = useState<SerialLogEntry[]>([]);
+  const [lastCard, setLastCard] = useState<LastCard | null>(null);
   const [diagData, setDiagData] = useState<ServiceDiagData>({
     cards: null,
     isOnline: null,
     relayTestResult: null,
     fillTimeMs: null,
     serialLog: [],
+    scannedCardId: null,
   });
   const eventSourceRef = useRef<EventSource | null>(null);
 
@@ -75,6 +90,16 @@ export function useStationStatus(stationId: string) {
       setExpiresAt(data.expiresAt || null);
       setErrorMessage(data.message || null);
 
+      if (data.cardId) {
+        setLastCard({
+          id: data.cardId,
+          cardType: data.cardType!,
+          balance: data.balance,
+          message: data.message,
+          scannedAt: new Date().toISOString(),
+        });
+      }
+
       if (data.state === 'service_mode') {
         if (data.cards !== undefined) {
           setDiagData(prev => ({ ...prev, cards: data.cards ?? null }));
@@ -90,6 +115,9 @@ export function useStationStatus(stationId: string) {
         }
         if (data.serialLog !== undefined) {
           setDiagData(prev => ({ ...prev, serialLog: data.serialLog ?? [] }));
+        }
+        if (data.scannedCardId !== undefined) {
+          setDiagData(prev => ({ ...prev, scannedCardId: data.scannedCardId ?? null }));
         }
       } else {
         // Keep serialLog when leaving service mode
@@ -120,5 +148,5 @@ export function useStationStatus(stationId: string) {
     };
   }, [connect]);
 
-  return { state, permissionId, expiresAt, errorMessage, isConnected, diagData, serialLog };
+  return { state, permissionId, expiresAt, errorMessage, isConnected, diagData, serialLog, lastCard };
 }

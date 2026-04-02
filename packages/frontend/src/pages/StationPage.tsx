@@ -113,7 +113,7 @@ export default function StationPage() {
 
   return (
     <div className="page-container">
-      {bgVideo && (
+      {bgVideo && state !== 'service_mode' && (
         <video
           ref={videoRef}
           className="background-video"

@@ -206,6 +206,9 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
         >
           {loading === 'test_button' ? '⏳' : '🔘'} Тест кнопки
         </button>
+      </div>
+
+      <div className="service-panel-full">
 
         <div className="fill-time-control">
           <label>Управление картами</label>
@@ -370,7 +373,8 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
         >
           ❌ Выход
         </button>
-      </div>
+
+      </div>{/* end service-panel-full */}
 
       <button
         className="service-btn"

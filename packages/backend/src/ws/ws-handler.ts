@@ -197,7 +197,16 @@ function handleNfcCardRead(stationId: string, cardId: string) {
 
   if (serviceDiagActive && serviceDiagActive.stationId === stationId) {
     const isManualEntry = serviceDiagActive.cardId === 'manual';
-    if (serviceDiagActive.cardId === cardId || isManualEntry) {
+    const isSameCard = serviceDiagActive.cardId === cardId;
+
+    // Выход из сервис режима: та же карта что вошла, ИЛИ в ручном режиме приложена сервисная карта
+    let shouldExit = isSameCard;
+    if (isManualEntry) {
+      const scannedCard = getCard(cardId);
+      shouldExit = scannedCard?.cardType === 'service';
+    }
+
+    if (shouldExit) {
       log('info', 'Exiting service mode via card tap', { stationId, manual: isManualEntry });
       serviceDiagActive = null;
       sendSseEvent(stationId, { state: 'waiting' });

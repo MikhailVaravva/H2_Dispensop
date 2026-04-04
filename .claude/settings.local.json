@@ -240,7 +240,17 @@
       "Bash(scp -i ~/.ssh/rpi_h2 packages/frontend/dist/assets/* h2@192.168.1.6:/home/h2/Alex_dispenser_project/packages/frontend/dist/assets/)",
       "Bash(npx vite:*)",
       "Bash(node_modules/.bin/tsc -b)",
-      "Bash(echo \"EXIT: $?\")"
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(where arduino-cli:*)",
+      "Bash(where arduino:*)",
+      "Read(//c/Program Files/Arduino IDE/**)",
+      "Read(//c/Program Files \\(x86\\)/**)",
+      "Read(//c/Users/mikha/AppData/Local/Arduino15/**)",
+      "Read(//c/Users/mikha/AppData/Local/Arduino15/packages/esp32/hardware/esp32/**)",
+      "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" version)",
+      "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" board list)",
+      "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" compile --fqbn esp32:esp32:esp32 \"D:/H2 Water/Alex_dispenser_project/arduino/dispenser_controller\")",
+      "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" upload --fqbn esp32:esp32:esp32 --port COM4 \"D:/H2 Water/Alex_dispenser_project/arduino/dispenser_controller\")"
     ]
   }
 }

@@ -34,11 +34,10 @@ void loop() {
   checkFillProgress();
   pollTouchPanel();
   
-  // Touch panel button - works same as GPIO button, only when enabled
+  // Touch panel button - works same as GPIO button
   if (touchButtonPressed()) {
     if (isButtonEnabled()) {
-      Serial.println("TOUCH_BUTTON_PRESSED");
-      startFill();
+      Serial.println("BUTTON_PRESSED");
       lastSerialActivity = millis();
     } else {
       Serial.println("TOUCH_IGNORED_BUTTON_DISABLED");

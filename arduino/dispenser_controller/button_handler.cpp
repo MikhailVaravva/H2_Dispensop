@@ -13,8 +13,11 @@ void buttonInit() {
 }
 
 void enableButton() {
+  // Reset state to prevent phantom press from stale readings
+  lastReading = digitalRead(PIN_BUTTON);
+  debouncedState = lastReading;
+  lastDebounceTime = millis();
   buttonEnabled = true;
-  Serial.println("DBG:enableButton called");
 }
 
 void disableButton() {

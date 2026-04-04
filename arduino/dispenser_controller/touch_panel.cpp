@@ -26,6 +26,12 @@ void touchPanelInit() {
 }
 
 void enableTouchButton() {
+  // Flush stale bytes from UART buffer to prevent phantom presses
+  while (TouchSerial.available()) {
+    TouchSerial.read();
+  }
+  touchEvent = false;
+  lastTouchTime = millis();  // Reset debounce timer
   touchEnabled = true;
 }
 

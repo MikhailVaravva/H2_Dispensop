@@ -5,6 +5,7 @@
 #include "fill_controller.h"
 #include "serial_protocol.h"
 #include "touch_panel.h"
+#include "led_strip.h"
 
 unsigned long lastSerialActivity = 0;
 bool testModeActive = false;
@@ -23,6 +24,7 @@ void setup() {
   fillInit();
   serialProtocolInit();
   touchPanelInit();
+  ledStripInit();
 
   lastSerialActivity = millis();
 
@@ -67,6 +69,7 @@ void loop() {
     testModeActive = false;
   }
   
+  ledStripUpdate();
   checkSafety();
 }
 

@@ -12,6 +12,11 @@
 #define PIN_TOUCH_TX     17    // GPIO 17 -> panel RX (optional response)
 #define TOUCH_BAUD       9600 // adjust based on panel protocol
 
+// Addressable LED strip (WS2812B)
+#define PIN_LED_STRIP    23    // GPIO 23 — data pin
+#define LED_STRIP_COUNT  20    // Number of LEDs
+#define LED_BRIGHTNESS   80    // 0-255
+
 // Serial configuration
 #define SERIAL_BAUD      9600
 
@@ -27,5 +32,7 @@
 
 // EEPROM addresses
 #define EEPROM_FILL_DURATION_ADDR 0
+#define EEPROM_LED_BRIGHTNESS_ADDR 4
+#define EEPROM_LED_COUNT_ADDR 5
 
 #endif

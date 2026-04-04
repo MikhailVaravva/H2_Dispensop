@@ -1,0 +1,20 @@
+[Unit]
+Description=Dispenser RPi Service (Serial + WebSocket)
+After=dispenser-backend.service
+Requires=dispenser-backend.service
+
+[Service]
+Type=simple
+User=h2
+WorkingDirectory=/opt/dispenser
+EnvironmentFile=/opt/dispenser/.env
+ExecStart=/usr/bin/node packages/rpi-service/dist/index.js
+Restart=always
+RestartSec=5
+SupplementaryGroups=dialout
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dispenser-rpi
+
+[Install]
+WantedBy=multi-user.target

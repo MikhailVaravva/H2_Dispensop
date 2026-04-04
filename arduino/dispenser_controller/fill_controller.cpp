@@ -6,6 +6,7 @@
 #include "relay_control.h"
 #include "led_control.h"
 #include "button_handler.h"
+#include "led_strip.h"
 
 static bool filling = false;
 static unsigned long fillStartTime = 0;
@@ -92,6 +93,7 @@ void checkFillProgress() {
     filling = false;
     enableButton();
     setLedGreen();
+    ledStripSetMode(STRIP_DONE);
     Serial.println("FILL_DONE");
     Serial.print("FILL_VOLUME:");
     Serial.println(currentFillDuration / 10); // approximate ml
@@ -119,6 +121,7 @@ void emergencyStop(const char* reason) {
   disableButton();
   errorState = true;
   setLedRed();
+  ledStripSetMode(STRIP_ERROR);
   Serial.print("EMERGENCY_STOP:");
   Serial.println(reason);
 }

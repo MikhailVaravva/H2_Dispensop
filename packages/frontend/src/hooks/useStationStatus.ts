@@ -29,6 +29,8 @@ export interface ServiceDiagData {
   isOnline: boolean | null;
   relayTestResult: 'testing' | 'ok' | 'failed' | null;
   fillTimeMs: number | null;
+  ledBrightness: number | null;
+  ledCount: number | null;
   serialLog: SerialLogEntry[];
   scannedCardId: string | null;
 }
@@ -42,6 +44,8 @@ interface StatusEvent {
   isOnline?: boolean;
   relayTestResult?: 'testing' | 'ok' | 'failed';
   fillTimeMs?: number;
+  ledBrightness?: number;
+  ledCount?: number;
   serialLog?: SerialLogEntry[];
   cardType?: CardType;
   cardId?: string;
@@ -70,6 +74,8 @@ export function useStationStatus(stationId: string) {
     isOnline: null,
     relayTestResult: null,
     fillTimeMs: null,
+    ledBrightness: null,
+    ledCount: null,
     serialLog: [],
     scannedCardId: null,
   });
@@ -112,6 +118,12 @@ export function useStationStatus(stationId: string) {
         }
         if (data.fillTimeMs !== undefined) {
           setDiagData(prev => ({ ...prev, fillTimeMs: data.fillTimeMs ?? null }));
+        }
+        if (data.ledBrightness !== undefined) {
+          setDiagData(prev => ({ ...prev, ledBrightness: data.ledBrightness ?? null }));
+        }
+        if (data.ledCount !== undefined) {
+          setDiagData(prev => ({ ...prev, ledCount: data.ledCount ?? null }));
         }
         if (data.serialLog !== undefined) {
           setDiagData(prev => ({ ...prev, serialLog: data.serialLog ?? [] }));

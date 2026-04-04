@@ -11,7 +11,7 @@ router.post('/:stationId/service', (req: Request, res: Response) => {
   const { action, fillTimeMs } = req.body;
   log('info', 'Service action received', { stationId, action, fillTimeMs });
 
-  if (!action || !['get_cards', 'get_status', 'test_relay', 'test_button', 'cancel', 'exit', 'set_fill_time', 'get_fill_time', 'enter'].includes(action)) {
+  if (!action || !['get_cards', 'get_status', 'test_relay', 'test_button', 'cancel', 'exit', 'set_fill_time', 'get_fill_time', 'get_led_settings', 'set_led_brightness', 'set_led_count', 'enter'].includes(action)) {
     res.status(400).json({ error: 'Invalid action' });
     return;
   }
@@ -47,6 +47,27 @@ router.post('/:stationId/service', (req: Request, res: Response) => {
       connection.send(JSON.stringify({ type: 'GET_FILL_TIME' }));
     }
     res.json({ success: true, action: 'get_fill_time' });
+    return;
+  }
+
+  if (action === 'get_led_settings') {
+    const connection = getConnection(stationId);
+    if (connection) connection.send(JSON.stringify({ type: 'GET_LED_SETTINGS' }));
+    res.json({ success: true, action });
+    return;
+  }
+
+  if (action === 'set_led_brightness') {
+    const connection = getConnection(stationId);
+    if (connection) connection.send(JSON.stringify({ type: 'SET_LED_BRIGHTNESS', value: req.body.value }));
+    res.json({ success: true, action, value: req.body.value });
+    return;
+  }
+
+  if (action === 'set_led_count') {
+    const connection = getConnection(stationId);
+    if (connection) connection.send(JSON.stringify({ type: 'SET_LED_COUNT', value: req.body.value }));
+    res.json({ success: true, action, value: req.body.value });
     return;
   }
 

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { callServiceDiag, ServiceDiagAction, setFillTime as apiSetFillTime, getFillTime as apiGetFillTime, getBgVideo, saveBgVideo, getAvailableVideos, VideoItem, checkCard, addCard, topupCard, getAllCards as apiGetAllCards, getCardHistory, updateCard, deleteCard, CardInfo, CardTransaction } from '../services/api';
+import { callServiceDiag, ServiceDiagAction, setFillTime as apiSetFillTime, getFillTime as apiGetFillTime, getLedSettings, setLedBrightness as apiSetLedBrightness, setLedCount as apiSetLedCount, getBgVideo, saveBgVideo, getAvailableVideos, VideoItem, checkCard, addCard, topupCard, getAllCards as apiGetAllCards, getCardHistory, updateCard, deleteCard, CardInfo, CardTransaction } from '../services/api';
 import { ServiceDiagData, ServiceCard, SerialLogEntry } from '../hooks/useStationStatus';
 
 interface ServicePanelProps {

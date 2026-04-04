@@ -39,6 +39,30 @@ export async function getFillTime(stationId: string): Promise<void> {
   }
 }
 
+export async function getLedSettings(stationId: string): Promise<void> {
+  await fetch(`${BASE_URL}/stations/${stationId}/service`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'get_led_settings' }),
+  });
+}
+
+export async function setLedBrightness(stationId: string, value: number): Promise<void> {
+  await fetch(`${BASE_URL}/stations/${stationId}/service`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'set_led_brightness', value }),
+  });
+}
+
+export async function setLedCount(stationId: string, value: number): Promise<void> {
+  await fetch(`${BASE_URL}/stations/${stationId}/service`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'set_led_count', value }),
+  });
+}
+
 export interface ServiceDiagResponse {
   success: boolean;
   action?: ServiceDiagAction;

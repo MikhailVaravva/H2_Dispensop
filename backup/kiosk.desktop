@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Dispenser Kiosk
+Exec=bash -c 'sleep 5 && xset s off && xset -dpms && xset s noblank && firefox --kiosk http://192.168.1.6:3000/station/station-001'
+X-GNOME-Autostart-enabled=true

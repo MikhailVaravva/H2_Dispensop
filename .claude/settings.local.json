@@ -250,7 +250,14 @@
       "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" version)",
       "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" board list)",
       "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" compile --fqbn esp32:esp32:esp32 \"D:/H2 Water/Alex_dispenser_project/arduino/dispenser_controller\")",
-      "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" upload --fqbn esp32:esp32:esp32 --port COM4 \"D:/H2 Water/Alex_dispenser_project/arduino/dispenser_controller\")"
+      "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" upload --fqbn esp32:esp32:esp32 --port COM4 \"D:/H2 Water/Alex_dispenser_project/arduino/dispenser_controller\")",
+      "Bash(gh release:*)",
+      "Bash(where gh:*)",
+      "Read(//c/Program Files/GitHub CLI/**)",
+      "Bash(ls \"C:/Program Files \\(x86\\)/GitHub CLI/gh.exe\")",
+      "Bash(\"C:/Program Files/Arduino IDE/resources/app/lib/backend/resources/arduino-cli.exe\" lib install \"Adafruit NeoPixel\")",
+      "Bash(powershell -Command \"& {$port = New-Object System.IO.Ports.SerialPort COM4,9600; $port.ReadTimeout=3000; $port.Open\\(\\); Start-Sleep -Seconds 1; try { $line = $port.ReadLine\\(\\); Write-Host $line } catch { Write-Host ''no data at 9600'' }; $port.Close\\(\\)}\")",
+      "Bash(python3 -c \":*)"
     ]
   }
 }

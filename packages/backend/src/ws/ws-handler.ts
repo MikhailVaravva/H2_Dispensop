@@ -118,6 +118,24 @@ export function handleRpiMessage(stationId: string, message: RpiToBackendMessage
       }
       break;
 
+    case 'LED_BRIGHTNESS':
+      if (serviceDiagActive && serviceDiagActive.stationId === stationId) {
+        sendSseEvent(stationId, {
+          state: 'service_mode',
+          ledBrightness: (message as any).value,
+        });
+      }
+      break;
+
+    case 'LED_COUNT':
+      if (serviceDiagActive && serviceDiagActive.stationId === stationId) {
+        sendSseEvent(stationId, {
+          state: 'service_mode',
+          ledCount: (message as any).value,
+        });
+      }
+      break;
+
     case 'PONG':
       break;
   }

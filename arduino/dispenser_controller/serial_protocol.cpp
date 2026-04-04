@@ -7,6 +7,7 @@
 #include "button_handler.h"
 #include "fill_controller.h"
 #include "touch_panel.h"
+#include "led_strip.h"
 
 extern unsigned long lastSerialActivity;
 extern bool testButtonModeActive;
@@ -32,10 +33,12 @@ static void processCommand(const String& cmd) {
   
   if (cmd == "SET_RED") {
     setLedRed();
+    ledStripSetMode(STRIP_IDLE);
     Serial.println("OK:SET_RED");
   }
   else if (cmd == "SET_GREEN") {
     setLedGreen();
+    ledStripSetMode(STRIP_READY);
     Serial.println("OK:SET_GREEN");
   }
   else if (cmd == "ENABLE_BUTTON") {
@@ -52,15 +55,18 @@ static void processCommand(const String& cmd) {
   }
   else if (cmd == "START_FILL_500ML") {
     Serial.println("OK:START_FILL_500ML");
+    ledStripSetMode(STRIP_FILLING);
     startFill();
     lastSerialActivity = millis();
   }
   else if (cmd == "STOP_FILL") {
     stopFill();
+    ledStripSetMode(STRIP_IDLE);
     Serial.println("OK:STOP_FILL");
   }
   else if (cmd == "RESET_ERROR") {
     resetError();
+    ledStripSetMode(STRIP_IDLE);
     Serial.println("OK:RESET_ERROR");
   }
   else if (cmd == "GET_STATUS") {
@@ -85,6 +91,24 @@ static void processCommand(const String& cmd) {
   else if (cmd.startsWith("SET_FILL_TIME:")) {
     unsigned long ms = cmd.substring(14).toInt();
     setFillDuration(ms);
+  }
+  else if (cmd == "GET_LED_SETTINGS") {
+    Serial.print("LED_BRIGHTNESS:");
+    Serial.println(ledStripGetBrightness());
+    Serial.print("LED_COUNT:");
+    Serial.println(ledStripGetCount());
+  }
+  else if (cmd.startsWith("SET_LED_BRIGHTNESS:")) {
+    uint8_t val = cmd.substring(19).toInt();
+    ledStripSetBrightness(val);
+    Serial.print("OK:SET_LED_BRIGHTNESS:");
+    Serial.println(val);
+  }
+  else if (cmd.startsWith("SET_LED_COUNT:")) {
+    uint8_t cnt = cmd.substring(14).toInt();
+    ledStripSetCount(cnt);
+    Serial.print("OK:SET_LED_COUNT:");
+    Serial.println(cnt);
   }
   else {
     Serial.println("ERROR:UNKNOWN_CMD");

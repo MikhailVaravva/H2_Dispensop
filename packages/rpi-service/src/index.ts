@@ -63,6 +63,12 @@ function handleSerialData(line: string) {
       log('info', 'Fill time received', { ms });
       wsClient.send({ type: 'FILL_TIME', ms } as any);
     }
+  } else if (line.startsWith('LED_BRIGHTNESS:')) {
+    const val = parseInt(line.substring(15), 10);
+    wsClient.send({ type: 'LED_BRIGHTNESS', value: val } as any);
+  } else if (line.startsWith('LED_COUNT:')) {
+    const val = parseInt(line.substring(10), 10);
+    wsClient.send({ type: 'LED_COUNT', value: val } as any);
   }
 }
 
@@ -116,6 +122,18 @@ function handleBackendMessage(message: BackendToRpiMessage) {
         .catch(() => {
           wsClient.send({ type: 'TEST_BUTTON_RESULT', success: false, pressed: false } as any);
         });
+      break;
+
+    case 'GET_LED_SETTINGS':
+      sendRawSerial('GET_LED_SETTINGS');
+      break;
+
+    case 'SET_LED_BRIGHTNESS':
+      sendRawSerial(`SET_LED_BRIGHTNESS:${(message as any).value}`);
+      break;
+
+    case 'SET_LED_COUNT':
+      sendRawSerial(`SET_LED_COUNT:${(message as any).value}`);
       break;
   }
 }

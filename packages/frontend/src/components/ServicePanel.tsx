@@ -24,6 +24,9 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
   const [cardMgmtResult, setCardMgmtResult] = useState<{ ok: boolean; msg: string } | null>(null);
   const [cardMgmtLoading, setCardMgmtLoading] = useState(false);
 
+  const [ledBrightness, setLedBrightness] = useState(80);
+  const [ledCount, setLedCount] = useState(20);
+
   const [showCardTable, setShowCardTable] = useState(false);
   const [allCards, setAllCards] = useState<CardInfo[]>([]);
   const [cardsLoading, setCardsLoading] = useState(false);
@@ -44,11 +47,17 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
     apiGetFillTime(stationId).catch(err => console.error('Failed to get fill time:', err));
     getBgVideo().then(setBgVideoUrl).catch(() => {});
     getAvailableVideos().then(setVideos).catch(() => {});
+    getLedSettings(stationId).catch(() => {});
   }, [stationId]);
 
   useEffect(() => {
     if (diagData.fillTimeMs !== null) setFillTime(diagData.fillTimeMs);
   }, [diagData.fillTimeMs]);
+
+  useEffect(() => {
+    if (diagData.ledBrightness !== null) setLedBrightness(diagData.ledBrightness);
+    if (diagData.ledCount !== null) setLedCount(diagData.ledCount);
+  }, [diagData.ledBrightness, diagData.ledCount]);
 
   const runAction = useCallback(async (action: ServiceDiagAction) => {
     setLoading(action);
@@ -218,6 +227,21 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
             <div className="sp-card-label">Налив: {fillTime} мс ({(fillTime/1000).toFixed(1)} с)</div>
             <input type="range" min="1000" max="30000" step="1000" value={fillTime} onChange={e => setFillTime(Number(e.target.value))} className="sp-range" />
             <button className="sp-btn sp-btn-orange" onClick={() => { apiSetFillTime(stationId, fillTime); setShowSerialLog(true); }}>💾 Сохранить</button>
+          </div>
+
+          <div className="sp-card">
+            <div className="sp-card-label">💡 LED лента</div>
+            <div className="sp-row">
+              <span style={{ fontSize: '12px', minWidth: '60px' }}>Яркость:</span>
+              <input type="range" min="0" max="255" value={ledBrightness} onChange={e => setLedBrightness(Number(e.target.value))} className="sp-range" style={{ flex: 1 }} />
+              <span style={{ fontSize: '12px', minWidth: '30px', textAlign: 'right' }}>{ledBrightness}</span>
+            </div>
+            <button className="sp-btn sp-btn-sm" onClick={() => apiSetLedBrightness(stationId, ledBrightness)}>💾 Яркость</button>
+            <div className="sp-row" style={{ marginTop: '8px' }}>
+              <span style={{ fontSize: '12px', minWidth: '60px' }}>Кол-во:</span>
+              <input type="number" min="1" max="256" value={ledCount} onChange={e => setLedCount(Number(e.target.value))} className="sp-input" style={{ width: '60px' }} />
+            </div>
+            <button className="sp-btn sp-btn-sm" onClick={() => apiSetLedCount(stationId, ledCount)}>💾 Кол-во</button>
           </div>
 
           <button className="sp-btn sp-btn-purple" onClick={() => { setShowCardTable(!showCardTable); if (!showCardTable) loadAllCards(); }}>

@@ -4,7 +4,9 @@
 #include "led_control.h"
 #include "relay_control.h"
 #include "button_handler.h"
+#include "button_handler.h"
 #include "fill_controller.h"
+#include "touch_panel.h"
 
 extern unsigned long lastSerialActivity;
 extern bool testButtonModeActive;
@@ -38,11 +40,13 @@ static void processCommand(const String& cmd) {
   }
   else if (cmd == "ENABLE_BUTTON") {
     enableButton();
+    enableTouchButton();
     Serial.println("OK:ENABLE_BUTTON");
     Serial.println("BUTTON_ENABLED");
   }
   else if (cmd == "DISABLE_BUTTON") {
     disableButton();
+    disableTouchButton();
     Serial.println("OK:DISABLE_BUTTON");
     Serial.println("BUTTON_DISABLED");
   }

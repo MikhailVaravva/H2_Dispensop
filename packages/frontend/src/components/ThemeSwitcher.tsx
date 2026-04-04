@@ -2,11 +2,7 @@ import { useState, useEffect } from 'react';
 
 const themes = [
   { id: 'default', name: 'Gradient', emoji: '1' },
-  { id: 'minimal', name: 'Minimal', emoji: '2' },
-  { id: 'dark', name: 'Dark', emoji: '3' },
-  { id: 'glass', name: 'Glass', emoji: '4' },
-  { id: 'industrial', name: 'Industrial', emoji: '5' },
-  { id: 'nature', name: 'Eco', emoji: '6' },
+  { id: 'dark', name: 'Dark', emoji: '2' },
 ];
 
 export default function ThemeSwitcher() {

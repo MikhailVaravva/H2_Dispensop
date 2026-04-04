@@ -2,6 +2,7 @@
 #include <EEPROM.h>
 #include "config.h"
 #include "fill_controller.h"
+#include "touch_panel.h"
 #include "relay_control.h"
 #include "led_control.h"
 #include "button_handler.h"
@@ -60,8 +61,9 @@ void startFill() {
 
   filling = true;
   fillStartTime = millis();
+  disableButton();  // Disable touch button during fill
+  disableTouchButton();  // Also disable touch panel
   openRelay();
-  disableButton();
   setLedRed();
   Serial.println("FILL_STARTED");
 }
@@ -88,6 +90,8 @@ void checkFillProgress() {
   if (elapsed >= currentFillDuration) {
     closeRelay();
     filling = false;
+    enableButton();
+    setLedGreen();
     Serial.println("FILL_DONE");
     Serial.print("FILL_VOLUME:");
     Serial.println(currentFillDuration / 10); // approximate ml

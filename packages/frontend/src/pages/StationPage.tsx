@@ -112,7 +112,7 @@ export default function StationPage() {
   }
 
   return (
-    <div className={`page-container${state === 'service_mode' ? ' service-mode-container' : ''}`}>
+    <div className={`page-container${state === 'service_mode' ? ' service-mode-container' : ''}`} style={state === 'service_mode' ? { maxWidth: '100%', padding: 0, alignItems: 'stretch', overflow: 'hidden' } : undefined}>
       {bgVideo && state !== 'service_mode' && (
         <video
           ref={videoRef}
@@ -130,7 +130,7 @@ export default function StationPage() {
         isOnline={station.isOnline}
       />
 
-      <div className="main-content">
+      <div className="main-content" style={state === 'service_mode' ? { alignItems: 'stretch', justifyContent: 'flex-start', padding: 0, gap: 0, width: '100%' } : undefined}>
         {state === 'service_mode' ? (
           <ServicePanel 
             stationId={stationId!} 

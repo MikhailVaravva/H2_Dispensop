@@ -1,7 +1,7 @@
-#ifndef TOUCH_PANEL_H
-#define TOUCH_PANEL_H
+#pragma once
 
 void touchPanelInit();
 void pollTouchPanel();
-
-#endif
+bool touchButtonPressed();
+void enableTouchButton();
+void disableTouchButton();

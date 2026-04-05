@@ -14,8 +14,6 @@ export interface PingMsg {
   type: 'PING';
 }
 
-export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestButtonMsg | SetFillTimeMsg | GetFillTimeMsg;
-
 // WebSocket messages: RPi → Backend
 export interface PermissionAckMsg {
   type: 'PERMISSION_ACK';
@@ -92,7 +90,9 @@ export type RpiToBackendMessage =
   | SerialLogMsg
   | RpiFillTimeMsg
   | TestRelayResultMsg
-  | TestButtonResultMsg;
+  | TestButtonResultMsg
+  | RpiLedBrightnessMsg
+  | RpiLedCountMsg;
 
 // SSE events: Backend → Frontend
 export type StationState =
@@ -117,6 +117,8 @@ export interface StatusUpdateEvent {
   relayTestResult?: 'testing' | 'ok' | 'failed';
   buttonTestResult?: 'testing' | 'pressed' | 'timeout' | 'error';
   fillTimeMs?: number;
+  ledBrightness?: number;
+  ledCount?: number;
   serialLog?: Array<{ time: string; direction: 'in' | 'out'; data: string }>;
   scannedCardId?: string;
 }
@@ -153,3 +155,29 @@ export interface SetFillTimeMsg {
 export interface GetFillTimeMsg {
   type: 'GET_FILL_TIME';
 }
+
+export interface GetLedSettingsMsg {
+  type: 'GET_LED_SETTINGS';
+}
+
+export interface SetLedBrightnessMsg {
+  type: 'SET_LED_BRIGHTNESS';
+  value: number;
+}
+
+export interface SetLedCountMsg {
+  type: 'SET_LED_COUNT';
+  value: number;
+}
+
+export interface RpiLedBrightnessMsg {
+  type: 'LED_BRIGHTNESS';
+  value: number;
+}
+
+export interface RpiLedCountMsg {
+  type: 'LED_COUNT';
+  value: number;
+}
+
+export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestButtonMsg | SetFillTimeMsg | GetFillTimeMsg | GetLedSettingsMsg | SetLedBrightnessMsg | SetLedCountMsg;

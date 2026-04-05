@@ -1,6 +1,6 @@
 import { log } from '../utils/logger';
 import * as fs from 'fs';
-import { spawn } from 'child_process';
+import { spawn, execSync } from 'child_process';
 
 let nfcEnabled = false;
 let pollInterval: NodeJS.Timeout | null = null;
@@ -12,8 +12,55 @@ export function isNfcEnabled(): boolean {
   return nfcEnabled;
 }
 
+function findNfcDevice(): string {
+  try {
+    const output = execSync('lsusb').toString();
+    const match = output.match(/Bus \d+ Device \d+: ID 1a86:e026/);
+    if (match) {
+      const deviceMatch = output.match(/Bus (\d+) Device (\d+): ID 1a86:e026/);
+      if (deviceMatch) {
+        const bus = deviceMatch[1].padStart(3, '0');
+        const dev = deviceMatch[2].padStart(3, '0');
+        const devPath = `/dev/bus/usb/${bus}/${dev}`;
+        log('info', 'Found NFC reader via lsusb', { devPath });
+        
+        const evdev = execSync(
+          `udevadm info --query=all --name=${devPath} 2>/dev/null | grep -o 'E: DEVNAME=/dev/input/event[0-9]*' | cut -d= -f2`
+        ).toString().trim();
+        
+        if (evdev) {
+          log('info', 'NFC reader device found', { evdev });
+          return evdev;
+        }
+      }
+    }
+    
+    for (let i = 0; i < 16; i++) {
+      const ev = `/dev/input/event${i}`;
+      try {
+        const info = execSync(`udevadm info --query=all --name=${ev} 2>/dev/null`).toString();
+        if (info.includes('1a86') && info.includes('e026')) {
+          log('info', 'Found NFC reader via udevadm', { device: ev });
+          return ev;
+        }
+      } catch {}
+    }
+  } catch (err) {
+    log('warn', 'Auto-detect failed', { error: (err as Error).message });
+  }
+  return null;
+}
+
 export async function initNfcReader(onCardRead: (cardId: string) => void): Promise<void> {
-  const device = process.env.NFC_READER_DEVICE || '/dev/input/event0';
+  // Auto-detect NFC device if not specified in env
+  let device = process.env.NFC_READER_DEVICE;
+  if (!device) {
+    device = findNfcDevice();
+    if (!device) {
+      log('warn', 'NFC reader device not found, trying event10');
+      device = '/dev/input/event10';
+    }
+  }
   
   try {
     log('info', 'Initializing NFC reader', { device });

@@ -28,7 +28,13 @@ app.use('/api/cards', cardsRoutes);
 
 // Serve frontend in production
 const frontendDist = path.resolve(__dirname, '../../frontend/dist');
-app.use(express.static(frontendDist));
+app.use(express.static(frontendDist, {
+  setHeaders: (res, path) => {
+    if (path.endsWith('.js') || path.endsWith('.css')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+    }
+  }
+}));
 
 // Serve videos
 const videosDir = path.join(__dirname, '../public/videos');

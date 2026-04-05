@@ -12,7 +12,7 @@ export function isNfcEnabled(): boolean {
   return nfcEnabled;
 }
 
-function findNfcDevice(): string {
+function findNfcDevice(): string | null {
   try {
     const output = execSync('lsusb').toString();
     const match = output.match(/Bus \d+ Device \d+: ID 1a86:e026/);
@@ -55,7 +55,7 @@ export async function initNfcReader(onCardRead: (cardId: string) => void): Promi
   // Auto-detect NFC device if not specified in env
   let device = process.env.NFC_READER_DEVICE;
   if (!device) {
-    device = findNfcDevice();
+    device = findNfcDevice() ?? undefined;
     if (!device) {
       log('warn', 'NFC reader device not found, trying event10');
       device = '/dev/input/event10';

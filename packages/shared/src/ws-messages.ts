@@ -158,6 +158,14 @@ export interface TestButtonMsg {
   type: 'TEST_BUTTON';
 }
 
+export interface SetGreenMsg {
+  type: 'SET_GREEN';
+}
+
+export interface SetRedMsg {
+  type: 'SET_RED';
+}
+
 export interface SetFillTimeMsg {
   type: 'SET_FILL_TIME';
   ms: number;
@@ -191,4 +199,4 @@ export interface RpiLedCountMsg {
   value: number;
 }
 
-export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestPumpMsg | TestButtonMsg | SetFillTimeMsg | GetFillTimeMsg | GetLedSettingsMsg | SetLedBrightnessMsg | SetLedCountMsg;
+export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestPumpMsg | TestButtonMsg | SetGreenMsg | SetRedMsg | SetFillTimeMsg | GetFillTimeMsg | GetLedSettingsMsg | SetLedBrightnessMsg | SetLedCountMsg;

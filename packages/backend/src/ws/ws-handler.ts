@@ -71,12 +71,23 @@ export function handleRpiMessage(stationId: string, message: RpiToBackendMessage
 
     case 'STATUS':
       log('info', 'RPi status', { stationId, state: message.state, serialConnected: message.serialConnected });
+      const rpiConnection = getConnection(stationId);
+      if (rpiConnection) {
+        rpiConnection.send(JSON.stringify({ type: 'SET_GREEN' } as BackendToRpiMessage));
+      }
       break;
 
     case 'TEST_RELAY_RESULT':
       sendSseEvent(stationId, {
         state: 'service_mode',
         relayTestResult: message.success ? 'ok' : 'failed',
+      });
+      break;
+
+    case 'TEST_PUMP_RESULT':
+      sendSseEvent(stationId, {
+        state: 'service_mode',
+        pumpTestResult: (message as any).success ? 'ok' : 'failed',
       });
       break;
 
@@ -174,7 +185,7 @@ export function handleServiceDiagMessage(stationId: string, action: ServiceDiagM
   if (action === 'test_relay') {
     sendSseEvent(stationId, {
       state: 'service_mode',
-      message: 'Тест реле...',
+      message: 'Тест клапана...',
       relayTestResult: 'testing' as const,
     });
     const connection = getConnection(stationId);

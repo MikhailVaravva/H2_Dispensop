@@ -78,12 +78,14 @@ static void processCommand(const String& cmd) {
   }
   else if (cmd == "TEST_RELAY") {
     enterTestMode();
+    pumpRelayOff();
     toggleRelay();
     Serial.print("OK:TEST_RELAY:");
     Serial.println(isRelayOpen() ? "ON" : "OFF");
   }
   else if (cmd == "TEST_PUMP") {
     enterTestMode();
+    closeRelay();
     togglePumpRelay();
     Serial.print("OK:TEST_PUMP:");
     Serial.println(isPumpRelayOn() ? "ON" : "OFF");

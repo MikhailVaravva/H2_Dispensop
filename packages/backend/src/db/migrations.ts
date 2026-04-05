@@ -95,5 +95,9 @@ export function runMigrations() {
     log('info', 'Seeded service card', { cardId: '999999999' });
   }
 
+  // Expire all active permissions on startup to prevent stale permissions
+  db.prepare("UPDATE permissions SET status = 'expired' WHERE status = 'active'").run();
+  log('info', 'Expired all active permissions on startup');
+
   log('info', 'Database migrations complete');
 }

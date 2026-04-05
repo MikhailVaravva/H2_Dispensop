@@ -65,16 +65,14 @@ export class StateMachine {
   private startExpiryTimer(expiresAt?: string) {
     this.clearExpiryTimer();
 
-    let delayMs: number;
+    let delayMs: number = 60_000; // Default 60s
     if (expiresAt) {
-      delayMs = new Date(expiresAt).getTime() - Date.now();
-    } else {
-      delayMs = 60_000; // Default 60s
-    }
-
-    if (delayMs <= 0) {
-      this.dispatch('TIMEOUT');
-      return;
+      // Ensure UTC parsing by appending Z if missing
+      const ts = expiresAt.endsWith('Z') ? expiresAt : expiresAt + 'Z';
+      const parsed = new Date(ts).getTime() - Date.now();
+      if (parsed > 0) {
+        delayMs = parsed;
+      }
     }
 
     this.expiryTimer = setTimeout(() => {

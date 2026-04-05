@@ -5,7 +5,7 @@ import { StationState } from './state-machine/states';
 import { WsClient } from './ws/ws-client';
 import { initSerial, getSerialConnected, closeSerial, sendCommand, sendRawSerial, setOnSerialLog, startSerialPing, stopSerialPing } from './serial/command-sender';
 import { initNfcReader, closeNfcReader } from './nfc/nfc-reader';
-import { BackendToRpiMessage } from '@dispenser/shared';
+import { BackendToRpiMessage, SerialCommand } from '@dispenser/shared';
 
 const machine = new StateMachine();
 const wsClient = new WsClient();
@@ -146,6 +146,16 @@ function handleBackendMessage(message: BackendToRpiMessage) {
     case 'SET_LED_COUNT':
       sendRawSerial(`SET_LED_COUNT:${(message as any).value}`);
       break;
+
+    case 'SET_GREEN':
+      log('info', 'Set green LED command received');
+      sendCommand(SerialCommand.SET_GREEN as any);
+      break;
+
+    case 'SET_RED':
+      log('info', 'Set red LED command received');
+      sendCommand(SerialCommand.SET_RED as any);
+      break;
   }
 }
 
@@ -209,9 +219,13 @@ async function main() {
       state: machine.getState(),
       serialConnected: getSerialConnected(),
     });
+    sendCommand(SerialCommand.SET_RED as any)
+      .catch(() => {});
   });
   wsClient.setOnDisconnected(() => {
-    log('warn', 'Lost connection to backend');
+    log('warn', 'Lost connection to backend - setting red LED');
+    sendCommand(SerialCommand.SET_RED as any)
+      .catch(() => {});
   });
   wsClient.connect();
 

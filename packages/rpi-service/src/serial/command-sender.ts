@@ -38,8 +38,9 @@ export function initSerial(onData: (line: string) => void): Promise<void> {
       // Check if this is an ACK for a pending command
       // Supports both exact "OK:CMD" and extended "OK:CMD:extra" formats
       if (pendingAck && (trimmed === `OK:${pendingAck.command}` || trimmed.startsWith(`OK:${pendingAck.command}:`))) {
-        pendingAck.resolve();
+        const ack = pendingAck;
         pendingAck = null;
+        ack.resolve();
         return;
       }
 

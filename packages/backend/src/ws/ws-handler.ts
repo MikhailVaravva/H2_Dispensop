@@ -71,10 +71,6 @@ export function handleRpiMessage(stationId: string, message: RpiToBackendMessage
 
     case 'STATUS':
       log('info', 'RPi status', { stationId, state: message.state, serialConnected: message.serialConnected });
-      const rpiConnection = getConnection(stationId);
-      if (rpiConnection) {
-        rpiConnection.send(JSON.stringify({ type: 'SET_GREEN' } as BackendToRpiMessage));
-      }
       break;
 
     case 'TEST_RELAY_RESULT':

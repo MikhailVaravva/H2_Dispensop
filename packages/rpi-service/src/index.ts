@@ -147,15 +147,7 @@ function handleBackendMessage(message: BackendToRpiMessage) {
       sendRawSerial(`SET_LED_COUNT:${(message as any).value}`);
       break;
 
-    case 'SET_GREEN':
-      log('info', 'Set green LED command received');
-      sendCommand(SerialCommand.SET_GREEN as any);
-      break;
-
-    case 'SET_RED':
-      log('info', 'Set red LED command received');
-      sendCommand(SerialCommand.SET_RED as any);
-      break;
+    // LED control is handled by state machine transitions, not direct commands
   }
 }
 

@@ -28,6 +28,7 @@ export interface ServiceDiagData {
   cards: ServiceCard[] | null;
   isOnline: boolean | null;
   relayTestResult: 'testing' | 'ok' | 'failed' | null;
+  pumpTestResult: 'testing' | 'ok' | 'failed' | null;
   fillTimeMs: number | null;
   ledBrightness: number | null;
   ledCount: number | null;
@@ -43,6 +44,7 @@ interface StatusEvent {
   cards?: ServiceCard[];
   isOnline?: boolean;
   relayTestResult?: 'testing' | 'ok' | 'failed';
+  pumpTestResult?: 'testing' | 'ok' | 'failed';
   fillTimeMs?: number;
   ledBrightness?: number;
   ledCount?: number;
@@ -73,6 +75,7 @@ export function useStationStatus(stationId: string) {
     cards: null,
     isOnline: null,
     relayTestResult: null,
+    pumpTestResult: null,
     fillTimeMs: null,
     ledBrightness: null,
     ledCount: null,
@@ -116,6 +119,9 @@ export function useStationStatus(stationId: string) {
         if (data.relayTestResult !== undefined) {
           setDiagData(prev => ({ ...prev, relayTestResult: data.relayTestResult ?? null }));
         }
+        if (data.pumpTestResult !== undefined) {
+          setDiagData(prev => ({ ...prev, pumpTestResult: data.pumpTestResult ?? null }));
+        }
         if (data.fillTimeMs !== undefined) {
           setDiagData(prev => ({ ...prev, fillTimeMs: data.fillTimeMs ?? null }));
         }
@@ -133,7 +139,7 @@ export function useStationStatus(stationId: string) {
         }
       } else {
         // Keep serialLog when leaving service mode
-        setDiagData(prev => ({ ...prev, cards: null, isOnline: null, relayTestResult: null, fillTimeMs: null }));
+        setDiagData(prev => ({ ...prev, cards: null, isOnline: null, relayTestResult: null, pumpTestResult: null, fillTimeMs: null }));
       }
     });
 

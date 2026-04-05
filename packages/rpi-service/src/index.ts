@@ -113,6 +113,17 @@ function handleBackendMessage(message: BackendToRpiMessage) {
         });
       break;
 
+    case 'TEST_PUMP':
+      log('info', 'Test pump command received');
+      sendCommand('TEST_PUMP' as any)
+        .then(() => {
+          wsClient.send({ type: 'TEST_PUMP_RESULT', success: true } as any);
+        })
+        .catch(() => {
+          wsClient.send({ type: 'TEST_PUMP_RESULT', success: false } as any);
+        });
+      break;
+
     case 'TEST_BUTTON':
       log('info', 'Test button command received');
       sendCommand('TEST_BUTTON' as any)

@@ -73,6 +73,11 @@ export interface TestRelayResultMsg {
   success: boolean;
 }
 
+export interface TestPumpResultMsg {
+  type: 'TEST_PUMP_RESULT';
+  success: boolean;
+}
+
 export interface TestButtonResultMsg {
   type: 'TEST_BUTTON_RESULT';
   result: 'pressed' | 'timeout' | 'error';
@@ -90,6 +95,7 @@ export type RpiToBackendMessage =
   | SerialLogMsg
   | RpiFillTimeMsg
   | TestRelayResultMsg
+  | TestPumpResultMsg
   | TestButtonResultMsg
   | RpiLedBrightnessMsg
   | RpiLedCountMsg;
@@ -115,6 +121,7 @@ export interface StatusUpdateEvent {
   cards?: Array<{ id: string; balance: number; cardType: CardType }>;
   isOnline?: boolean;
   relayTestResult?: 'testing' | 'ok' | 'failed';
+  pumpTestResult?: 'testing' | 'ok' | 'failed';
   buttonTestResult?: 'testing' | 'pressed' | 'timeout' | 'error';
   fillTimeMs?: number;
   ledBrightness?: number;
@@ -127,7 +134,7 @@ export type CardType = 'service' | 'staff' | 'user';
 
 export interface ServiceDiagMsg {
   type: 'SERVICE_DIAG';
-  action: 'get_cards' | 'get_status' | 'test_relay' | 'test_button' | 'cancel';
+  action: 'get_cards' | 'get_status' | 'test_relay' | 'test_pump' | 'test_button' | 'cancel';
 }
 
 export interface ServiceDiagResultMsg {
@@ -141,6 +148,10 @@ export interface ServiceDiagResultMsg {
 
 export interface TestRelayMsg {
   type: 'TEST_RELAY';
+}
+
+export interface TestPumpMsg {
+  type: 'TEST_PUMP';
 }
 
 export interface TestButtonMsg {
@@ -180,4 +191,4 @@ export interface RpiLedCountMsg {
   value: number;
 }
 
-export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestButtonMsg | SetFillTimeMsg | GetFillTimeMsg | GetLedSettingsMsg | SetLedBrightnessMsg | SetLedCountMsg;
+export type BackendToRpiMessage = GrantPermissionMsg | CancelPermissionMsg | PingMsg | ServiceDiagMsg | TestRelayMsg | TestPumpMsg | TestButtonMsg | SetFillTimeMsg | GetFillTimeMsg | GetLedSettingsMsg | SetLedBrightnessMsg | SetLedCountMsg;

@@ -183,6 +183,22 @@ export function handleServiceDiagMessage(stationId: string, action: ServiceDiagM
     }
   }
 
+  if (action === 'test_pump') {
+    const connection = getConnection(stationId);
+    log('info', 'TEST_PUMP_DEBUG', { stationId, hasConnection: !!connection, connectionState: connection?.readyState });
+    sendSseEvent(stationId, {
+      state: 'service_mode',
+      message: 'Тест помпы...',
+      pumpTestResult: 'testing' as const,
+    });
+    if (connection) {
+      connection.send(JSON.stringify({ type: 'TEST_PUMP' } satisfies BackendToRpiMessage));
+      log('info', 'TEST_PUMP sent to RPi');
+    } else {
+      log('info', 'TEST_PUMP NO CONNECTION');
+    }
+  }
+
   if (action === 'test_button') {
     sendSseEvent(stationId, {
       state: 'service_mode',

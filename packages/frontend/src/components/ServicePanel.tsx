@@ -163,6 +163,9 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
             <button className="sp-btn" onClick={() => { runAction('test_relay'); setShowSerialLog(true); }} disabled={loading !== null}>
               {loading === 'test_relay' ? '⏳' : '🔌'} Реле
             </button>
+            <button className="sp-btn" onClick={() => { runAction('test_pump'); setShowSerialLog(true); }} disabled={loading !== null}>
+              {loading === 'test_pump' ? '⏳' : '💧'} Помпа
+            </button>
             <button className="sp-btn" onClick={() => { runAction('test_button'); setShowSerialLog(true); }} disabled={loading !== null}>
               {loading === 'test_button' ? '⏳' : '🔘'} Кнопка
             </button>
@@ -197,6 +200,14 @@ export default function ServicePanel({ stationId, diagData }: ServicePanelProps)
               {diagData.relayTestResult === 'testing' && 'Тестирование реле...'}
               {diagData.relayTestResult === 'ok' && '✓ Реле OK'}
               {diagData.relayTestResult === 'failed' && '✗ Реле не ответило'}
+            </div>
+          )}
+
+          {diagData.pumpTestResult && (
+            <div className={`sp-result relay-${diagData.pumpTestResult}`}>
+              {diagData.pumpTestResult === 'testing' && 'Тестирование помпы...'}
+              {diagData.pumpTestResult === 'ok' && '✓ Помпа OK'}
+              {diagData.pumpTestResult === 'failed' && '✗ Помпа не ответило'}
             </div>
           )}
         </div>

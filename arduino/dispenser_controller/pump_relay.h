@@ -5,5 +5,6 @@ void pumpRelayInit();
 void pumpRelayOn();
 void pumpRelayOff();
 bool isPumpRelayOn();
+void togglePumpRelay();
 
 #endif

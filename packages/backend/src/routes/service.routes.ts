@@ -11,7 +11,7 @@ router.post('/:stationId/service', (req: Request, res: Response) => {
   const { action, fillTimeMs } = req.body;
   log('info', 'Service action received', { stationId, action, fillTimeMs });
 
-  if (!action || !['get_cards', 'get_status', 'test_relay', 'test_button', 'cancel', 'exit', 'set_fill_time', 'get_fill_time', 'get_led_settings', 'set_led_brightness', 'set_led_count', 'enter'].includes(action)) {
+  if (!action || !['get_cards', 'get_status', 'test_relay', 'test_pump', 'test_button', 'cancel', 'exit', 'set_fill_time', 'get_fill_time', 'get_led_settings', 'set_led_brightness', 'set_led_count', 'enter'].includes(action)) {
     res.status(400).json({ error: 'Invalid action' });
     return;
   }

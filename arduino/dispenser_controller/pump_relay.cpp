@@ -23,3 +23,11 @@ void pumpRelayOff() {
 bool isPumpRelayOn() {
   return pumpState;
 }
+
+void togglePumpRelay() {
+  if (pumpState) {
+    pumpRelayOff();
+  } else {
+    pumpRelayOn();
+  }
+}

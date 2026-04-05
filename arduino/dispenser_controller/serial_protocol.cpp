@@ -82,6 +82,12 @@ static void processCommand(const String& cmd) {
     Serial.print("OK:TEST_RELAY:");
     Serial.println(isRelayOpen() ? "ON" : "OFF");
   }
+  else if (cmd == "TEST_PUMP") {
+    enterTestMode();
+    togglePumpRelay();
+    Serial.print("OK:TEST_PUMP:");
+    Serial.println(isPumpRelayOn() ? "ON" : "OFF");
+  }
   else if (cmd == "TEST_BUTTON") {
     enableButton();  // Enable button for test mode
     startTestButtonMode();

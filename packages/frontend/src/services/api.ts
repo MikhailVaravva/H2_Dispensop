@@ -15,7 +15,7 @@ export interface PourResponse {
   expiresInSeconds: number;
 }
 
-export type ServiceDiagAction = 'get_cards' | 'get_status' | 'test_relay' | 'test_button' | 'cancel' | 'get_fill_time' | 'enter';
+export type ServiceDiagAction = 'get_cards' | 'get_status' | 'test_relay' | 'test_pump' | 'test_button' | 'cancel' | 'get_fill_time' | 'enter';
 
 export async function setFillTime(stationId: string, ms: number): Promise<void> {
   const res = await fetch(`${BASE_URL}/stations/${stationId}/service`, {

@@ -8,6 +8,7 @@
 #include "fill_controller.h"
 #include "touch_panel.h"
 #include "led_strip.h"
+#include "pump_relay.h"
 
 extern unsigned long lastSerialActivity;
 extern bool testButtonModeActive;
@@ -39,6 +40,7 @@ static void processCommand(const String& cmd) {
   else if (cmd == "SET_GREEN") {
     setLedGreen();
     ledStripSetMode(STRIP_READY);
+    pumpRelayOn();
     Serial.println("OK:SET_GREEN");
   }
   else if (cmd == "ENABLE_BUTTON") {
@@ -61,11 +63,13 @@ static void processCommand(const String& cmd) {
   }
   else if (cmd == "STOP_FILL") {
     stopFill();
+    pumpRelayOff();
     ledStripSetMode(STRIP_IDLE);
     Serial.println("OK:STOP_FILL");
   }
   else if (cmd == "RESET_ERROR") {
     resetError();
+    pumpRelayOff();
     ledStripSetMode(STRIP_IDLE);
     Serial.println("OK:RESET_ERROR");
   }

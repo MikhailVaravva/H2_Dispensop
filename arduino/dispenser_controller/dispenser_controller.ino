@@ -6,6 +6,7 @@
 #include "serial_protocol.h"
 #include "touch_panel.h"
 #include "led_strip.h"
+#include "pump_relay.h"
 
 unsigned long lastSerialActivity = 0;
 bool testModeActive = false;
@@ -20,6 +21,7 @@ void setup() {
 
   ledInit();
   relayInit();
+  pumpRelayInit();
   buttonInit();
   fillInit();
   serialProtocolInit();

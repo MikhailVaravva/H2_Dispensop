@@ -7,6 +7,7 @@
 #include "led_control.h"
 #include "button_handler.h"
 #include "led_strip.h"
+#include "pump_relay.h"
 
 static bool filling = false;
 static unsigned long fillStartTime = 0;
@@ -90,6 +91,7 @@ void checkFillProgress() {
   // Normal completion
   if (elapsed >= currentFillDuration) {
     closeRelay();
+    pumpRelayOff();
     filling = false;
     enableButton();
     setLedGreen();
@@ -111,12 +113,14 @@ void resetError() {
   errorState = false;
   filling = false;
   closeRelay();
+  pumpRelayOff();
   disableButton();
   setLedRed();
 }
 
 void emergencyStop(const char* reason) {
   closeRelay();
+  pumpRelayOff();
   filling = false;
   disableButton();
   errorState = true;

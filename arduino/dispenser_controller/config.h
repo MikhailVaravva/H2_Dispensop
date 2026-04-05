@@ -5,7 +5,8 @@
 #define PIN_BUTTON       4    // Digital input, internal pull-up
 #define PIN_LED_RED      2     // Red LED (or bicolor LED anode 1)
 #define PIN_LED_GREEN    15    // Green LED (or bicolor LED anode 2)
-#define PIN_RELAY        18    // Relay controlling valve/pump
+#define PIN_RELAY        18    // Relay controlling valve
+#define PIN_PUMP_RELAY   22    // Relay controlling pump (on when ready, off after fill)
 
 // Touch panel UART (HardwareSerial 2, remapped)
 #define PIN_TOUCH_RX     16    // GPIO 16 <- panel TX
